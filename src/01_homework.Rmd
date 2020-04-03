@@ -1,0 +1,172 @@
+---
+title: "Homework 1"
+author: "Group B"
+date: "8th April 2020"
+output:
+  html_document:
+    toc: yes
+  beamer_presentation:
+    highlight: tango
+  include: null
+  ioslides_presentation:
+    highlight: tango
+  pdf_document:
+    highlight: tango
+    keep_tex: yes
+    toc: yes
+  slide_level: 2
+  slidy_presentation:
+    fig.height: 3
+    fig.width: 4
+    highlight: tango
+header-includes:
+- \usepackage{color}
+- \definecolor{Purple}{HTML}{911146}
+- \definecolor{Orange}{HTML}{CF4A30}
+- \setbeamercolor{alerted text}{fg=Orange}
+- \setbeamercolor{frametitle}{bg=Purple}
+institute: University of Udine & University of Trieste
+graphics: yes
+fontsize: 10pt
+---
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', warning=FALSE, message=FALSE, fig.asp=0.625, dev='png', global.par = TRUE, dev.args=list(pointsize=10), fig.path = 'figs/')
+library(MASS)
+```
+```{r setup, include=FALSE}
+library(knitr)
+local({
+  hook_plot = knit_hooks$get('plot')
+  knit_hooks$set(plot = function(x, options) {
+    paste0('\n\n----\n\n', hook_plot(x, options))
+  })
+})
+```
+
+**Exercise 1**
+
+- Write a function $\mathsf{binomial(x,n,p)}$ for the binomial distribution above, depending on parameters $\mathsf{x,n,p}$, and test it with some prespecified values. Use the function $\mathsf{choose()}$ for the binomial coefficient.
+
+- Plot two binomials with $n=20$, and $p=0.3, 0.6$ respectively.
+
+***Solution***
+```{r ex1,  echo=TRUE}
+# function
+binomial <- function(x, n, p){
+  prob <- choose(n, x) * p^x * (1-p)^(n-x)
+  return(prob)
+}
+
+# test the function
+binomial(3,6,0.5)
+dbinom(3,6,0.5)
+
+binomial(5,100,0.1)
+dbinom(5,100,0.1)
+
+binomial(5,10,0.5)
+dbinom(5,10,0.5)
+
+binomial(1,2,0.5)
+dbinom(1,2,0.5)
+
+# plot
+x<- seq(1:20)
+y1<-binomial(x,20,0.3)
+y2 <- binomial(x,20,0.6)
+plot(x,y1)
+points(x,y2, col="red")
+```
+
+**Exercise 2**
+
+- Generate in $\mathsf{R}$ the same output, but using $\mathsf{rgeom()}$ for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
+
+***Solution***
+```{r ex2,  echo=TRUE}
+
+```
+
+**Exercise 3**
+
+- Show in $\mathsf{R}$, also graphically, that $\mbox{Gamma}(n/2, 1/2)$ coincides with a $\chi^{2}_{n}$.
+
+- Find the 5\% and the 95\% quantiles of a $\mbox{Gamma}(3,3)$.
+
+***Solution***
+```{r ex3,  echo=TRUE}
+#plot
+x<- seq(1:25)
+df<-5
+n<-1000
+y<-rchisq(n, df)
+hist(y, breaks=40, probability=TRUE)
+curve(dgamma(x, rate=1/2, shape=df/2), col="red", lwd=2, add=TRUE)
+
+#quantile
+qgamma(0.05, 3,3)
+qgamma(0.95,3,3)
+```
+
+**Exercise 4**
+
+- Generate $n=1000$ values from a $\mbox{Beta}(5,2)$ and compute the sample mean and the sample variance.
+
+***Solution***
+```{r ex4,  echo=TRUE}
+n= 1000
+x <- rbeta(n,5,2)
+mean(x)
+var(x)
+```
+
+**Exercise 5**
+
+- Analogously, show with a simple $\mathsf{R}$ function that a negative binomial distribution may be seen as a mixture between a Poisson and a Gamma. In symbols: $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \ldots$.
+
+***Solution***
+```{r ex5,  echo=TRUE}
+
+```
+
+**Exercise 6**
+
+- Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\mathsf{R}$ function for the empirical cumulative distribution function and reproduce the two plots above.
+
+***Solution***
+```{r ex6,  echo=TRUE}
+#function to calculate ecfd
+my_ecdf <- function(x){
+  z <- c()
+  y <- sort(x)
+  for (i in 1:length(y)){
+    z[i]<-i/length(y)
+  }
+  z <- cbind(z, y)
+  return(z)
+}
+
+#function to plot ecfd
+plot_ecdf <- function(x){
+  plot(x[,2], x[,1], type="s", ylim=c(-0.01, 1.01), xlab="x", ylab = "Fn(x)", main="ECDF and CDF: n=50")
+  abline(0, 0, col="gray", lty=2)
+  abline(1, 0, col="gray", lty=2)
+}
+
+# n=50
+set.seed(2)
+par(mfrow=c(1,2))
+n<-50
+y<-rbeta(n, 3,4)
+tt<-seq(from=0, to=1, by=0.01)
+my_edf_beta <-my_ecdf(y)
+plot_ecdf(my_edf_beta)
+lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
+
+#n=500
+n2<-500
+y2<-rbeta(n2, 3,4)
+my_edf_beta2<-my_ecdf(y2)
+plot_ecdf(my_edf_beta2)
+lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
+```

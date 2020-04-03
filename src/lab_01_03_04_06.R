@@ -1,0 +1,85 @@
+######## LAB 1 ###########
+
+######### EX 1 #######
+
+# function
+binomial <- function(x, n, p){
+  prob <- choose(n, x) * p^x * (1-p)^(n-x)
+  return(prob)
+}
+
+# test the function
+binomial(3,6,0.5)
+dbinom(3,6,0.5)
+
+binomial(5,100,0.1)
+dbinom(5,100,0.1)
+
+binomial(5,10,0.5)
+dbinom(5,10,0.5)
+
+binomial(1,2,0.5)
+dbinom(1,2,0.5)
+
+# plot
+x<- seq(1:20)
+y1<-binomial(x,20,0.3)
+y2 <- binomial(x,20,0.6)
+plot(x,y1)
+points(x,y2, col="red")
+
+######## EX 3 ##########
+
+#plot
+x<- seq(1:25)
+df<-5
+n<-1000
+y<-rchisq(n, df)
+hist(y, breaks=40, probability=TRUE)
+curve(dgamma(x, rate=1/2, shape=df/2), col="red", lwd=2, add=TRUE)
+
+#quantile
+qgamma(0.05, 3,3)
+qgamma(0.95,3,3)
+
+######## EX 4 ######
+n= 1000
+x <- rbeta(n,5,2)
+mean(x)
+var(x)
+
+####### EX 6 ######
+#function to calculate ecfd
+my_ecdf <- function(x){
+  z <- c()
+  y <- sort(x)
+  for (i in 1:length(y)){
+    z[i]<-i/length(y)
+  }
+  z <- cbind(z, y)
+  return(z)
+}
+
+#function to plot ecfd
+plot_ecdf <- function(x){
+  plot(x[,2], x[,1], type="s", ylim=c(-0.01, 1.01), xlab="x", ylab = "Fn(x)", main="ECDF and CDF: n=50")
+  abline(0, 0, col="gray", lty=2)
+  abline(1, 0, col="gray", lty=2)
+}
+
+# n=50
+set.seed(2)
+par(mfrow=c(1,2))
+n<-50
+y<-rbeta(n, 3,4)
+tt<-seq(from=0, to=1, by=0.01)
+my_edf_beta <-my_ecdf(y)
+plot_ecdf(my_edf_beta)
+lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
+
+#n=500
+n2<-500
+y2<-rbeta(n2, 3,4)
+my_edf_beta2<-my_ecdf(y2)
+plot_ecdf(my_edf_beta2)
+lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
