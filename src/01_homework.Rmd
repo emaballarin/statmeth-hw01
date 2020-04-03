@@ -42,6 +42,7 @@ local({
   })
 })
 ```
+# LAB EXERCISES
 
 **Exercise 1**
 
@@ -80,10 +81,49 @@ points(x,y2, col="red")
 
 **Exercise 2**
 
-- Generate in $\mathsf{R}$ the same output, but using $\mathsf{rgeom()}$ for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
+Generate in $\mathsf{R}$ the same output, but using $\mathsf{rgeom()}$ for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
 
 ***Solution***
+
+We can obtain the Binomial pdf dbinom(r, k, p) as the sum of k iid Geometrical distributions dgeom(r, p) with same p and r.
+
 ```{r ex2,  echo=TRUE}
+# Hyperparameters
+k <- 3
+p <- 0.08
+upbound <- 1000
+
+
+# As Binomial pdf
+plot(0:upbound,
+     dnbinom(0:upbound, size = k, prob = p),
+     xlab="Y=number of failures before k successes", ylab="f(x), exact",pch=21, bg=1)
+
+
+# As sum of k Geometric rvs, via histogram estimation with count averaging
+
+avg_factor <- 1500  # A good...
+bin_fact <- 1       # ... compromise.
+seq_stencil <- seq(from = 0, to = upbound, by = bin_fact)
+
+
+mycounts <- vector(mode = "numeric", upbound/bin_fact)
+
+# Averaging
+for (cnt in 0:avg_factor)
+{
+    mycounts = mycounts +
+        hist(
+        colSums(t(matrix(rgeom(((0:(k*(upbound+1)-1))%%(upbound+1)), prob = p), nrow=(upbound+1), ncol=k))),
+        breaks = seq_stencil,
+        plot = FALSE)$density
+}
+
+# Normalization
+myedpf = mycounts/avg_factor
+
+plot(seq_stencil[0:(length(seq_stencil)-1)], myedpf, # The number of bins is one less the number of breaks!
+     xlab="Y=number of failures before k successes", ylab="f(x), approx.",pch=21, bg=1)
 
 ```
 
@@ -110,9 +150,10 @@ qgamma(0.95,3,3)
 
 **Exercise 4**
 
-- Generate $n=1000$ values from a $\mbox{Beta}(5,2)$ and compute the sample mean and the sample variance.
+Generate $n=1000$ values from a $\mbox{Beta}(5,2)$ and compute the sample mean and the sample variance.
 
 ***Solution***
+
 ```{r ex4,  echo=TRUE}
 n= 1000
 x <- rbeta(n,5,2)
@@ -122,18 +163,33 @@ var(x)
 
 **Exercise 5**
 
-- Analogously, show with a simple $\mathsf{R}$ function that a negative binomial distribution may be seen as a mixture between a Poisson and a Gamma. In symbols: $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \ldots$.
+Show with a simple $\mathsf{R}$ function that a negative binomial distribution may be seen as a mixture between a Poisson and a Gamma. In symbols: $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \ldots$.
 
 ***Solution***
-```{r ex5,  echo=TRUE}
 
+We can see that if $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \mbox{NB} (\alpha, \frac{1}{\beta +1 })$.
+```{r ex5,  echo=TRUE}
+n <- 100000
+r <- 0.5
+p <- 0.5
+
+nb_mixture <- function(my_n, my_r, my_p)
+{
+    Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
+    X = rpois(my_n, lambda = Z)
+    return(X)
+}
+
+plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
+points(dnbinom((0:15), r,p), col='red')
 ```
 
 **Exercise 6**
 
-- Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\mathsf{R}$ function for the empirical cumulative distribution function and reproduce the two plots above.
+Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\mathsf{R}$ function for the empirical cumulative distribution function and reproduce the two plots above.
 
 ***Solution***
+
 ```{r ex6,  echo=TRUE}
 #function to calculate ecfd
 my_ecdf <- function(x){
@@ -170,3 +226,264 @@ my_edf_beta2<-my_ecdf(y2)
 plot_ecdf(my_edf_beta2)
 lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
 ```
+
+**Exercise 7**
+
+Compare in $\mathsf{R}$ the assumption of normality for these samples:
+
+- $y_1, \ldots, y_{100} \sim t_{\nu},$ with $\nu=5,20, 100$. What does it happens when the number of degrees of freedom $\nu$ increases?
+
+- $y_1, \ldots, y_{100} \sim \mbox{Cauchy}(0,1)$. Do you note something weird for the extremes quantiles? 
+
+***Solution***
+
+In order to compare the assumption of normality you can use the Q-Q plot.
+
+```{r ex7_a,  echo=TRUE}
+par(mfrow=c(1,3))
+n <- 100
+y <- rt(n, df=5)
+qqplot(qt(ppoints(n), df=5), y,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(5): n=100")
+qqline(y, distribution = function(p) qt(p, df = 5), col="red")
+
+y2 <- rt(100, 20)
+qqplot(qt(ppoints(n),20),y2,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(20): n=100")
+qqline(y2, distribution = function(p) qt(p, df = 20), col="red")
+
+y3 <- rt(100, 100)
+qqplot(qt(ppoints(n),100),y3,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(100): n=100")
+qqline(y3, distribution = function(p) qt(p, df = 100), col="red")
+```
+
+Looking at the extremes quantiles of $y_1, \ldots, y_{100} \sim \mbox{Cauchy}(0,1)$ we can see that the majority of the points lay on the theoretical qauntile and their values are near to each other. Nevertheless we notice the presence of some outliers that are very far form the mass of the other points.
+
+```{r ex7_b,  echo=TRUE}
+y4 <- rcauchy(x, 0, 1)
+qqplot(qcauchy(ppoints(n),0, 1),y4,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for Cauchy(0,1): n=100")
+qqline(y4, distribution = function(p) qcauchy(p, 0, 1), col="red")
+```
+
+**Exercise 8**
+
+Write a general $\mathsf{R}$ function for checking the validity of the central limit theorem. *Hint* The function will consist of two parameters: clt_function <- function($\mathsf{n}$, $\mathsf{distr}$), where the first one is the sampe size and the second one is the kind of distribution from which you generate. Use plots for visualizing the results.
+
+
+# DAAG EXERCISES
+
+**Exercise 15**
+
+The data frame socsupport (DAAG) has data from a survey on social and other kinds of
+support, for a group of university students. It includes Beck Depression Inventory (BDI) scores.
+
+The following are two alternative plots of BDI against age:\
+plot(BDI ˜ age, data=socsupport)\
+plot(BDI ˜ unclass(age), data=socsupport)\
+For examination of cases where the score seems very high, which plot is more useful? Explain.
+
+Why is it necessary to be cautious in making anything of the plots for students in the three oldest age categories (25-30, 31-40, 40+)?
+
+***Solution***
+
+For examination of cases where the score seems very high it could be better the second plot. Both the plots show how the observations, groupped by age, are distributed among the score of BDI. Nevertheless thanks to the ungroupping procedure, in the second plot it is also possible to see the numerosity of each group. In this way it is possible to understand how much reliable are the data of each group.
+```{r DAAGex15_a,  echo=TRUE}
+library(DAAG)
+data(socsupport)
+par(mfrow=c(1,2))
+plot(BDI ~ age, data=socsupport)
+plot(BDI ~ unclass(age), data=socsupport)
+```
+It is necessary to be cautious in making anythig of the plots for students in the tree oldest age categories because, as we can see from the summary, there are very few data for those classes. Hence the data can be not representative for the students of that age.
+```{r DAAGex15_b,  echo=TRUE}
+summary(socsupport$age)
+```
+
+**Exercise 17**
+
+Given a vector x, the following demonstrates alternative ways to create a vector of numbers
+from 1 through n, where n is the length of the vector:\
+x <- c(8, 54, 534, 1630, 6611)\
+seq(1, length(x))\
+seq(along=x)
+
+Now set x <- NULL and repeat each of the calculations seq(1, length(x)) and
+seq(along=x). Which version of the calculation should be used in order to return a vector
+of length 0 in the event that the supplied argument is NULL.
+
+***Solution***
+
+In order to return a vector of length 0 in the event that the supplied argument is NULL, you have to use the sintax seq(along=x).\
+Writing seq(1, length(x)) 1 is interpreted as the starting value of the sequance and length(x), that is equal to 0, as the end value of the sequence. Since the default value of the paramether by is ((to - from)/(length.out - 1)), that in this case is equal to -1, a vector of two elements, 1 and 0, is created.
+
+```{r DAAGex17,  echo=TRUE}
+x <- c(8, 54, 534, 1630, 6611)
+seq(1, length(x))
+seq(along = x)
+
+x <- NULL
+seq(1, length(x))
+length(seq(1, length(x)))
+seq(along=x)
+length(seq(along = x))
+```
+
+**Exercise 20**
+
+The help page for iris (type help(iris)) gives code that converts the data in
+iris3 (datasets package) to case-by-variable format, with column names “Sepal.Length” “Sepal.Width”, “Petal.Length”, “Petal.Width”, and “Species”. Look up the help pages for the
+functions that are used, and make sure that you understand them. Then add annotation to this
+code that explains each step in the computation.
+
+***Solution***
+
+```{r DAAGex20,  echo=TRUE}
+library(datasets)
+help(iris)
+
+dni3 <- dimnames(iris3) # save the dimnamens of the object
+                        # iris3
+# given that iris3 is a 3-dimensional array 50 x 4 x 3
+# the function dimnamens returns the names of each one
+# of the 3 dimensions of it. 
+# the output is a list where the first element is null
+# becuse the rows of iris3 have no names
+# the second and the third elements are arrays that
+# contain the names of the second and third dimension
+# of iris3
+
+prova <- aperm(iris3, c(1,3,2))
+ii <- data.frame( # create a dataframe from a matrix
+    matrix( # create a matrix form the transpose of
+            # the iris3 array
+      aperm(iris3, c(1,3,2)), # transpose the 3-d array iris
+                              # result: 50 x 3 x 4 array
+      ncol = 4, # having 4 columns
+      # set the names of the rows and columns of the matrix
+      dimnames = list(NULL, # create a list, starting from a
+                            # NULL object
+                      sub(" L.",".Length",
+                          #substitute "L."  with ".Length"
+                          # in the output of the following line
+                          sub(" W.",".Width", dni3[[2]])))),
+                          # substitute "W." with ".Width" in
+                          # the strings contained in the list
+                          # of the names of the second
+                          # dimension of iris3: ("Sepal L."
+                          #  "Sepal W." "Petal L." "Petal W.")
+    # create a new column of the dataframe called Spieces
+    Species = gl( # generate factors given:
+      3, 50, # the number of levels (=3), the number of
+             # replications (=50)
+      labels =  # and the labels of the levels
+        sub("S", "s", sub("V", "v", dni3[[3]])))) 
+        # substitute "S" with "s" and "V" with "v" in in the
+        # strings contained in the list of the names of the
+        # third dimension of iris3
+        # ("Setosa" "Versicolor" "Virginica")
+
+all.equal(ii, iris) # compare the created object and iris
+
+```
+
+# C.S. EXERCISES
+
+**Exercise 1.6**
+
+Let $X$ and $Y$ be non-independent random variables, such that $var(X) =σ_{X}^{2}$, $var(Y)=σ_{Y}^{2}$ and $cov(X, Y) =σ_{X, Y}^{2}$. 
+Using the result from Section 1.6.2, find $var(X+Y)$ and $var(X−Y)$.
+
+***Solution***
+
+If we define $Z = X + Y$, than we can compute $Var(Z)$ as follow:
+
+$Var(Z) = E[(Z - E[Z])^{2}] = E[(X + Y - E[X + Y])^{2}] = E[((X - E[X]) + (Y - E[Y]))^{2}] =$ 
+
+$E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] + 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] = \sigma_{X}^{2} + \sigma_{Y}^{2} + 2 \cdot \sigma_{X, Y}^{2}$
+
+If we define $Z = X - Y$, than we can compute $Var(z)$ as follow:
+
+$Var(Z) = E[(Z - E[Z])^{2}] = E[(X - Y - E[X - Y])^{2}] = E[((X - E[X]) - (Y - E[Y]))^{2}] =$ 
+
+$E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] - 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] = \sigma_{X}^{2} + \sigma_{Y}^{2} - 2 \cdot \sigma_{X, Y}^{2}$
+
+**Exercise 1.8**
+
+If $log(X)∼N(μ, σ^{2})$, find the p.d.f. of $X$.
+
+***Solution***
+
+From the Transformation Theorem for r.v. we can define the c.d.f.:
+
+$F_{log(X)}(x) = P(log(X) \leq x) = P(X \leq e^{x}) = F_{X}(e^{x}) = \int_{0}^{e^{x}} \frac{1}{\sqrt{2 \cdot \pi \cdot \sigma^{2}}} \cdot e^{- \frac{(t - \mu)^{2}}{2}} \space dt$.
+
+And also the p.d.f.:
+
+$f_{X}(x) = \frac{d F_{X}(e^{x})}{dx} = \frac{1}{\sqrt{2 \cdot \pi \cdot \sigma^{2}}} \cdot e^{- \frac{(e^{x} - \mu)^{2}}{2}}$.
+
+**Exercise 1.9**
+
+Discrete random variable $Y$ has a Poisson distribution with parameter $λ$ if its p.d.f. is $f(y) =λ \cdot y \cdot e^{- \frac{\lambda}{y!}}$, for $y= 0,1, \dots$
+
+a) Find the moment generating function for $Y$ (hint: the power series repre-sentation of the exponential function is useful).
+
+b) If $Y_{1}∼Poi(λ_{1})$ and independently $Y_{2}∼Poi(λ_{2})$ deduce the distribution of $Y_{1}+Y_{2}$, by employing a general property of m.g.f.s.
+
+c) Making use of the previous result and the central limit theorem, deduce the normal approximation to the Poisson distribution.
+
+d) Confirm the previous result graphically, using R functions dpois, dnorm, plotorbarplotandlines. Confirm that the approximation improves with increasing $λ$.
+
+***Solution***
+
+***a)***
+The momenti generating function (mgf) is defined as:
+$G_{Y}(t) = E[e^{t \cdot Y}] = \sum_{i = 1}^{n} p_{i} \cdot e^{t \cdot Y_{i}}$.
+
+  In case of discrete distribution, so the mgf for the Poisson distribution is the following one:
+  $G_{Y}(t) = \sum_{i = 0}^{\infty} e^{t \cdot i} \cdot \lambda^{i} \cdot \frac{e^{-\lambda}}{i!} = e^{-\lambda} \cdot \sum_{i = 0}^{\infty} \frac{(\lambda \cdot e^{t})^{i}}{i!} = e^{-\lambda} \cdot e^{\lambda \cdot e^{t}} = e^{\lambda \cdot (e^{t} - 1)}$
+
+***b)***
+Here we can apply the mgf property with indipendent random variables:
+$G_{Y_{1} + Y_{2}}(t) = G_{Y_{1}}(t) \cdot G_{Y_{2}}(t) = e^{\lambda_{1} \cdot (e^{t} - 1)} \cdot e^{\lambda_{2} \cdot (e^{t} - 1)} = e^{(\lambda_{1} + \lambda_{2}) \cdot (e^{t}-1)}$
+
+Note that this is the mfg of a Poinsson distribution with $\lambda = \lambda_{1} + \lambda_{2}$.
+
+***c)***
+Note that $X_{n} ~ Poi(n)$ and consider the standardized Poisson $\frac{X_{n}-n}{\sqrt{n}}$, then:
+
+$\lim_{n \rightarrow\infty}  E[e^{t \cdot \frac{X_{n}-n}{\sqrt{n}}}] = \lim_{n \rightarrow\infty} e^{- t\cdot \sqrt{n}} \cdot E[e^{t \cdot \frac{X_{n}}{\sqrt{n}}}] =$
+
+$\lim_{n \rightarrow\infty} e^{- t\cdot \sqrt{n}} \cdot e^{n \cdot (e^{\frac{t}{\sqrt{n}}} - 1)} = \lim_{n \rightarrow\infty} e^{-t \cdot \sqrt{n} + n \cdot (1 + t \cdot n^{\frac{1}{2}} + \frac{t^{2} \cdot n^{-1}}{2} + \cdots -1)} =$
+
+$\lim_{n \rightarrow\infty} e^{-t \cdot \sqrt{n} + t \cdot \sqrt{n} + \frac{t^{2}}{2} + \frac{t^{3}}{6 \cdot \sqrt{n}} + \cdots} = \lim_{n \rightarrow\infty} e^{\frac{t^{2}}{2}} \cdot e^{(\frac{t^{3}}{6 \cdot \sqrt{n}} + \cdots)} = e^{\frac{t^{2}}{2}}$
+
+Where $e^{\frac{t^{2}}{2}}$ is the mgf of the standard normal distribution. 
+
+***d)***
+```{r}
+x <- seq(from = 0, to = 20, by = 1)
+lambda <- c(0.7, 1.2, 5, 15)
+
+par(mfcol = c(2, 2))
+for(i in 1:4){
+  poisson_distribution <- dpois(x, lambda[i])
+  normal_distribution <- dnorm(x, mean = lambda[i], sd = sqrt(lambda[i]))
+  
+  plot(x, poisson_distribution, type = "l", ylab = "F(x)", 
+       main = paste("lambda = ", lambda[i]), col = "blue")
+  lines(x, normal_distribution, type = "l", col = "red")
+  legend("topright", legend = c("poisson", "normal"), 
+         col = c("blue", "red"), lty = c(1, 1))
+}
+```
+
+
+
+
+

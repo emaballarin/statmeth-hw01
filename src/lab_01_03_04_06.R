@@ -83,3 +83,31 @@ y2<-rbeta(n2, 3,4)
 my_edf_beta2<-my_ecdf(y2)
 plot_ecdf(my_edf_beta2)
 lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
+
+##### EX 7 ####
+
+par(mfrow=c(1,3))
+n <- 100
+y <- rt(n, df=5)
+qqplot(qt(ppoints(n), df=5), y,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(5): n=100")
+qqline(y, distribution = function(p) qt(p, df = 5), col="red")
+
+y2 <- rt(100, 20)
+qqplot(qt(ppoints(n),20),y2,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(20): n=100")
+qqline(y2, distribution = function(p) qt(p, df = 20), col="red")
+
+y3 <- rt(100, 100)
+qqplot(qt(ppoints(n),100),y3,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for t-student(100): n=100")
+qqline(y3, distribution = function(p) qt(p, df = 100), col="red")
+
+y4 <- rcauchy(x, 0, 1)
+qqplot(qcauchy(ppoints(n),0, 1),y4,
+       xlab="True quantiles", ylab="Sample quantiles",
+       main = "Q-Q plot for Cauchy(0,1): n=100")
+qqline(y4, distribution = function(p) qcauchy(p, 0, 1), col="red")
