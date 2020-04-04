@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # Files for personal use
 worklog.md
+
+# Python stuff
+**/.ipynb_checkpoints/
