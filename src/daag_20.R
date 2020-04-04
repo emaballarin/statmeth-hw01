@@ -1,17 +1,3 @@
-# ---------------------------------------------------------------------------- #
-#                                                                              #
-# Statistical Methods for Data Science ~ Homework Block 1                      #
-#                                                                              #
-# |> EXERCISE: DAAG 20 <|                                                      #
-#                                                                              #
-# (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
-#            (a.k.a. "Group B")                                                #
-#                                                                              #
-# Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
-#                                                                              #
-# ---------------------------------------------------------------------------- #
-
-
 library(datasets)
 #help(iris)
 

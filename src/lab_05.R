@@ -1,15 +1,3 @@
-# ---------------------------------------------------------------------------- #
-#                                                                              #
-# Statistical Methods for Data Science ~ Homework Block 1                      #
-#                                                                              #
-# |> EXERCISE: LAB 5 <|                                                        #
-#                                                                              #
-# (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
-#                                                                              #
-# Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
-#                                                                              #
-# ---------------------------------------------------------------------------- #
-
 # NOTE TO SELF: May need additional fixup
 
 n <- 100000
