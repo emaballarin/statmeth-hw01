@@ -2,27 +2,22 @@
 #                                                                              #
 # Statistical Methods for Data Science ~ Homework Block 1                      #
 #                                                                              #
-# |> EXERCISE: LAB 5 <|                                                        #
+# |> EXERCISE: DAAG 15 <|                                                      #
 #                                                                              #
 # (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
+#            (a.k.a. "Group B")                                                #
 #                                                                              #
 # Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-# NOTE TO SELF: May need additional fixup
+library(DAAG)
+data(socsupport)
 
-n <- 100000
-r <- 0.5
-p <- 0.5
+par(mfrow=c(1,2))
 
-nb_mixture <- function(my_n, my_r, my_p)
-{
-    Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
-    X = rpois(my_n, lambda = Z)
-    return(X)
-}
+n=10
+plot(BDI ~ age, data=socsupport, main = paste("The value of n is:", n))
+plot(BDI ~ unclass(age), data=socsupport)
 
-plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
-points(dnbinom((0:15), r,p), col='red')
-
+summary(socsupport$age)

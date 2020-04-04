@@ -5,10 +5,13 @@
 # |> EXERCISE: LAB 2 <|                                                        #
 #                                                                              #
 # (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
+#            (a.k.a. "Group B")                                                #
 #                                                                              #
 # Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
+
+par(mfrow = c(2, 1))
 
 # We can "easily" obtain the Binomial pdf dbinom(r, k, p) as the sum of k iid
 # Geometrical distributions dgeom(r, p) with same p and r.

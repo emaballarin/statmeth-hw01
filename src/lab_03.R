@@ -2,27 +2,29 @@
 #                                                                              #
 # Statistical Methods for Data Science ~ Homework Block 1                      #
 #                                                                              #
-# |> EXERCISE: LAB 5 <|                                                        #
+# |> EXERCISE: LAB 3 <|                                                        #
 #                                                                              #
 # (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
+#            (a.k.a. "Group B")                                                #
 #                                                                              #
 # Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-# NOTE TO SELF: May need additional fixup
+# Plot
+x <- seq(1:25)
+df <- 5
+n <- 1000
+y <- rchisq(n, df)
 
-n <- 100000
-r <- 0.5
-p <- 0.5
+hist(y, breaks = 40, probability = TRUE)
+curve(
+    dgamma(x, rate = 1 / 2, shape = df / 2),
+    col = "red",
+    lwd = 2,
+    add = TRUE
+)
 
-nb_mixture <- function(my_n, my_r, my_p)
-{
-    Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
-    X = rpois(my_n, lambda = Z)
-    return(X)
-}
-
-plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
-points(dnbinom((0:15), r,p), col='red')
-
+# Quantiles
+qgamma(0.05, 3, 3)
+qgamma(0.95, 3, 3)

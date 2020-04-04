@@ -1,6 +1,6 @@
 ---
-title: "Homework 1"
-author: "Group B"
+title: "SMDS Homework - Block 1"
+author: "Group B (A. Vegliach, P. Morichetti, A. Cicchini and E. Ballarin)"
 date: "8th April 2020"
 output:
   html_document:
@@ -25,7 +25,7 @@ header-includes:
 - \definecolor{Orange}{HTML}{CF4A30}
 - \setbeamercolor{alerted text}{fg=Orange}
 - \setbeamercolor{frametitle}{bg=Purple}
-institute: University of Udine & University of Trieste
+institute: University of Trieste, SISSA, ICTP, University of Udine
 graphics: yes
 fontsize: 10pt
 ---
@@ -510,8 +510,3 @@ for(i in 1:4){
          col = c("blue", "red"), lty = c(1, 1))
 }
 ```
-
-
-
-
-

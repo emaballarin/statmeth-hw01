@@ -2,27 +2,38 @@
 #                                                                              #
 # Statistical Methods for Data Science ~ Homework Block 1                      #
 #                                                                              #
-# |> EXERCISE: LAB 5 <|                                                        #
+# |> EXERCISE: LAB 1 <|                                                        #
 #                                                                              #
 # (C) 2020-* Vegliach, Morichetti, Cicchini and Ballarin                       #
+#            (a.k.a. "Group B")                                                #
 #                                                                              #
 # Eventually-updated version: https://github.com/emaballarin/statmeth-hw01     #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-# NOTE TO SELF: May need additional fixup
-
-n <- 100000
-r <- 0.5
-p <- 0.5
-
-nb_mixture <- function(my_n, my_r, my_p)
+# Function
+binomial <- function(x, n, p)
 {
-    Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
-    X = rpois(my_n, lambda = Z)
-    return(X)
+    prob <- choose(n, x) * p ^ x * (1 - p) ^ (n - x)
+    return(prob)
 }
 
-plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
-points(dnbinom((0:15), r,p), col='red')
+# Test the function
+binomial(3, 6, 0.5)
+dbinom(3, 6, 0.5)
 
+binomial(5, 100, 0.1)
+dbinom(5, 100, 0.1)
+
+binomial(5, 10, 0.5)
+dbinom(5, 10, 0.5)
+
+binomial(1, 2, 0.5)
+dbinom(1, 2, 0.5)
+
+# Plot
+x <- seq(1:20)
+y1 <- binomial(x, 20, 0.3)
+y2 <- binomial(x, 20, 0.6)
+plot(x, y1)
+points(x, y2, col = "red")
