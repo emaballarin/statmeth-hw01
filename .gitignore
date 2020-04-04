@@ -43,3 +43,7 @@ worklog.md
 
 # Python stuff
 **/.ipynb_checkpoints/
+
+# KnitR output
+figs/
+01_homework.html

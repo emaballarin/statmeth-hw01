@@ -1,6 +1,4 @@
-# NOTE TO SELF: May need additional fixup
-
-n <- 100000
+n <- 200000
 r <- 0.5
 p <- 0.5
 
@@ -11,6 +9,5 @@ nb_mixture <- function(my_n, my_r, my_p)
     return(X)
 }
 
-plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
+plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=15, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n", plot = FALSE)$counts/n)
 points(dnbinom((0:15), r,p), col='red')
-

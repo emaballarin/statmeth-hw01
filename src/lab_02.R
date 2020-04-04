@@ -1,8 +1,5 @@
 par(mfrow = c(2, 1))
 
-# We can "easily" obtain the Binomial pdf dbinom(r, k, p) as the sum of k iid
-# Geometrical distributions dgeom(r, p) with same p and r.
-
 # Hyperparameters
 k <- 3
 p <- 0.08

@@ -1,6 +1,6 @@
 ---
 title: "SMDS Homework - Block 1"
-author: "Group B (A. Vegliach, P. Morichetti, A. Cicchini and E. Ballarin)"
+author: "A. Vegliach, P. Morichetti, A. Cicchini and E. Ballarin"
 date: "8th April 2020"
 output:
   html_document:
@@ -29,10 +29,12 @@ institute: University of Trieste, SISSA, ICTP, University of Udine
 graphics: yes
 fontsize: 10pt
 ---
+
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.align = 'center', warning=FALSE, message=FALSE, fig.asp=0.625, dev='png', global.par = TRUE, dev.args=list(pointsize=10), fig.path = 'figs/')
 library(MASS)
 ```
+
 ```{r setup, include=FALSE}
 library(knitr)
 local({
@@ -42,7 +44,9 @@ local({
   })
 })
 ```
-# LAB EXERCISES
+
+
+# ***LAB*** EXERCISES
 
 **Exercise 1**
 
@@ -51,33 +55,9 @@ local({
 - Plot two binomials with $n=20$, and $p=0.3, 0.6$ respectively.
 
 ***Solution***
-```{r ex1,  echo=TRUE}
-# function
-binomial <- function(x, n, p){
-  prob <- choose(n, x) * p^x * (1-p)^(n-x)
-  return(prob)
-}
-
-# test the function
-binomial(3,6,0.5)
-dbinom(3,6,0.5)
-
-binomial(5,100,0.1)
-dbinom(5,100,0.1)
-
-binomial(5,10,0.5)
-dbinom(5,10,0.5)
-
-binomial(1,2,0.5)
-dbinom(1,2,0.5)
-
-# plot
-x<- seq(1:20)
-y1<-binomial(x,20,0.3)
-y2 <- binomial(x,20,0.6)
-plot(x,y1)
-points(x,y2, col="red")
+```{r lab_01, code = readLines("src/lab_01.R"), echo=TRUE}
 ```
+
 
 **Exercise 2**
 
@@ -85,47 +65,11 @@ Generate in $\mathsf{R}$ the same output, but using $\mathsf{rgeom()}$ for gener
 
 ***Solution***
 
-We can obtain the Binomial pdf dbinom(r, k, p) as the sum of k iid Geometrical distributions dgeom(r, p) with same p and r.
+We can obtain the Binomial pdf $Binom(r, k, p)$ as the sum of $k$ iid Geometrical distributions $Geom(r, p)$ with same $p$ and $r$.
 
-```{r ex2,  echo=TRUE}
-# Hyperparameters
-k <- 3
-p <- 0.08
-upbound <- 1000
-
-
-# As Binomial pdf
-plot(0:upbound,
-     dnbinom(0:upbound, size = k, prob = p),
-     xlab="Y=number of failures before k successes", ylab="f(x), exact",pch=21, bg=1)
-
-
-# As sum of k Geometric rvs, via histogram estimation with count averaging
-
-avg_factor <- 1500  # A good...
-bin_fact <- 1       # ... compromise.
-seq_stencil <- seq(from = 0, to = upbound, by = bin_fact)
-
-
-mycounts <- vector(mode = "numeric", upbound/bin_fact)
-
-# Averaging
-for (cnt in 0:avg_factor)
-{
-    mycounts = mycounts +
-        hist(
-        colSums(t(matrix(rgeom(((0:(k*(upbound+1)-1))%%(upbound+1)), prob = p), nrow=(upbound+1), ncol=k))),
-        breaks = seq_stencil,
-        plot = FALSE)$density
-}
-
-# Normalization
-myedpf = mycounts/avg_factor
-
-plot(seq_stencil[0:(length(seq_stencil)-1)], myedpf, # The number of bins is one less the number of breaks!
-     xlab="Y=number of failures before k successes", ylab="f(x), approx.",pch=21, bg=1)
-
+```{r lab_02, code = readLines("src/lab_02.R"), echo=TRUE}
 ```
+
 
 **Exercise 3**
 
@@ -134,32 +78,18 @@ plot(seq_stencil[0:(length(seq_stencil)-1)], myedpf, # The number of bins is one
 - Find the 5\% and the 95\% quantiles of a $\mbox{Gamma}(3,3)$.
 
 ***Solution***
-```{r ex3,  echo=TRUE}
-#plot
-x<- seq(1:25)
-df<-5
-n<-1000
-y<-rchisq(n, df)
-hist(y, breaks=40, probability=TRUE)
-curve(dgamma(x, rate=1/2, shape=df/2), col="red", lwd=2, add=TRUE)
-
-#quantile
-qgamma(0.05, 3,3)
-qgamma(0.95,3,3)
+```{r lab_03, code = readLines("src/lab_03.R"), echo=TRUE}
 ```
+
 
 **Exercise 4**
 
 Generate $n=1000$ values from a $\mbox{Beta}(5,2)$ and compute the sample mean and the sample variance.
 
 ***Solution***
-
-```{r ex4,  echo=TRUE}
-n= 1000
-x <- rbeta(n,5,2)
-mean(x)
-var(x)
+```{r lab_04, code = readLines("src/lab_04.R"), echo=TRUE}
 ```
+
 
 **Exercise 5**
 
@@ -167,65 +97,20 @@ Show with a simple $\mathsf{R}$ function that a negative binomial distribution m
 
 ***Solution***
 
-We can see that if $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \mbox{NB} (\alpha, \frac{1}{\beta +1 })$.
-```{r ex5,  echo=TRUE}
-n <- 100000
-r <- 0.5
-p <- 0.5
+We can see that if $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \mbox{NB} (\alpha, \frac{1}{\beta+1 })$.
 
-nb_mixture <- function(my_n, my_r, my_p)
-{
-    Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
-    X = rpois(my_n, lambda = Z)
-    return(X)
-}
-
-plot(hist(nb_mixture(n, r, p), freq = FALSE, breaks=20, main=paste("Histogram for a NB(0.3, 0.6)"), xlab="n")$counts/n)
-points(dnbinom((0:15), r,p), col='red')
+```{r lab_05, code = readLines("src/lab_05.R"), echo=TRUE}
 ```
+
 
 **Exercise 6**
 
 Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\mathsf{R}$ function for the empirical cumulative distribution function and reproduce the two plots above.
 
 ***Solution***
-
-```{r ex6,  echo=TRUE}
-#function to calculate ecfd
-my_ecdf <- function(x){
-  z <- c()
-  y <- sort(x)
-  for (i in 1:length(y)){
-    z[i]<-i/length(y)
-  }
-  z <- cbind(z, y)
-  return(z)
-}
-
-#function to plot ecfd
-plot_ecdf <- function(x){
-  plot(x[,2], x[,1], type="s", ylim=c(-0.01, 1.01), xlab="x", ylab = "Fn(x)", main="ECDF and CDF: n=50")
-  abline(0, 0, col="gray", lty=2)
-  abline(1, 0, col="gray", lty=2)
-}
-
-# n=50
-set.seed(2)
-par(mfrow=c(1,2))
-n<-50
-y<-rbeta(n, 3,4)
-tt<-seq(from=0, to=1, by=0.01)
-my_edf_beta <-my_ecdf(y)
-plot_ecdf(my_edf_beta)
-lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
-
-#n=500
-n2<-500
-y2<-rbeta(n2, 3,4)
-my_edf_beta2<-my_ecdf(y2)
-plot_ecdf(my_edf_beta2)
-lines(tt, pbeta(tt,3,4), col=2, lty=2, lwd=2)
+```{r lab_06, code = readLines("src/lab_06.R"), echo=TRUE}
 ```
+
 
 **Exercise 7**
 
@@ -275,36 +160,11 @@ qqline(y4, distribution = function(p) qcauchy(p, 0, 1), col="red")
 
 Write a general $\mathsf{R}$ function for checking the validity of the central limit theorem. *Hint* The function will consist of two parameters: clt_function <- function($\mathsf{n}$, $\mathsf{distr}$), where the first one is the sampe size and the second one is the kind of distribution from which you generate. Use plots for visualizing the results.
 
-```{r ex8,  echo=TRUE}
-clt_function <- function(n, dist){
-  
-  x<-seq(1, n)
-  
-  sample <- switch(dist,
-                   "beta" = rbeta(x, 2, 5),
-                   "binomial" = rbinom(x, n, 0.5),
-                   "chisquared" = rchisq(x, 5),
-                   "gamma" = rgamma(x, 3),
-                   "negativebinomial" = rnbinom(x, 3, 0.5),
-                   "tstudent" = rt(x, 5))
-  
-  # distribution of the sample
-  hist(sample, freq=FALSE, main="CLT", border="red", nclass=50)
-
-  # normal
-  mu = mean(sample)
-  var = var(sample)
-  curve(dnorm(x, mu, sqrt(var)), add= TRUE, col="black", lwd=2)
-}
-
-par(mfrow=c(2,2))
-clt_function(1000, "beta")
-clt_function(1000, "binomial")
-clt_function(1000, "chisquared")
-clt_function(1000, "tstudent")
+***Solution***
+```{r lab_08, code = readLines("src/lab_08.R"), echo=TRUE}
 ```
 
-# DAAG EXERCISES
+# ***DAAG*** EXERCISES
 
 **Exercise 15**
 
@@ -371,9 +231,10 @@ code that explains each step in the computation.
 
 ***Solution***
 
-```{r DAAGex20,  echo=TRUE}
+```{r daag_20,  echo=TRUE}
 library(datasets)
-help(iris)
+
+#help(iris)
 
 dni3 <- dimnames(iris3) # save the dimnamens of the object
                         # iris3
@@ -386,29 +247,35 @@ dni3 <- dimnames(iris3) # save the dimnamens of the object
 # contain the names of the second and third dimension
 # of iris3
 
-prova <- aperm(iris3, c(1,3,2))
+test <- aperm(iris3, c(1,3,2))
 ii <- data.frame( # create a dataframe from a matrix
     matrix( # create a matrix form the transpose of
             # the iris3 array
+
       aperm(iris3, c(1,3,2)), # transpose the 3-d array iris
                               # result: 50 x 3 x 4 array
       ncol = 4, # having 4 columns
+
       # set the names of the rows and columns of the matrix
       dimnames = list(NULL, # create a list, starting from a
                             # NULL object
+
                       sub(" L.",".Length",
                           #substitute "L."  with ".Length"
                           # in the output of the following line
+
                           sub(" W.",".Width", dni3[[2]])))),
                           # substitute "W." with ".Width" in
                           # the strings contained in the list
                           # of the names of the second
                           # dimension of iris3: ("Sepal L."
                           #  "Sepal W." "Petal L." "Petal W.")
+
     # create a new column of the dataframe called Spieces
     Species = gl( # generate factors given:
       3, 50, # the number of levels (=3), the number of
              # replications (=50)
+
       labels =  # and the labels of the levels
         sub("S", "s", sub("V", "v", dni3[[3]])))) 
         # substitute "S" with "s" and "V" with "v" in in the
@@ -420,7 +287,7 @@ all.equal(ii, iris) # compare the created object and iris
 
 ```
 
-# C.S. EXERCISES
+# ***CS*** EXERCISES
 
 **Exercise 1.6**
 
@@ -494,19 +361,5 @@ $\lim_{n \rightarrow\infty} e^{-t \cdot \sqrt{n} + t \cdot \sqrt{n} + \frac{t^{2
 Where $e^{\frac{t^{2}}{2}}$ is the mgf of the standard normal distribution. 
 
 ***d)***
-```{r}
-x <- seq(from = 0, to = 20, by = 1)
-lambda <- c(0.7, 1.2, 5, 15)
-
-par(mfcol = c(2, 2))
-for(i in 1:4){
-  poisson_distribution <- dpois(x, lambda[i])
-  normal_distribution <- dnorm(x, mean = lambda[i], sd = sqrt(lambda[i]))
-  
-  plot(x, poisson_distribution, type = "l", ylab = "F(x)", 
-       main = paste("lambda = ", lambda[i]), col = "blue")
-  lines(x, normal_distribution, type = "l", col = "red")
-  legend("topright", legend = c("poisson", "normal"), 
-         col = c("blue", "red"), lty = c(1, 1))
-}
+```{r cs_1.9, code = readLines("src/cs_1.9.R"), echo=TRUE}
 ```
