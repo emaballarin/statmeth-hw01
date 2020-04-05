@@ -122,7 +122,9 @@ Compare in `R` the assumption of normality for these samples:
 
 ***Solution***
 
-In order to compare the assumption of normality you can use the Q-Q plot.
+In order to compare the assumption of normality w.r.t. a sample you can use the Q-Q plot vs. the Normal distribution.
+
+From the Q-Q plots that follow, related to a t-Student distribution with an increasing number of degrees of freedom, we can see that the t-Student is better and better approximated (until asymptotic convergence, as the theory shows) for an arbitrarily large number of *d.o.f.*. In particular, the deviations of Q-Q points to the theoretical Q-Q line decrease as the number of *d.o.f.* increases.
 
 ```{r lab_07_a,  echo=TRUE}
 par(mfrow = c(1, 3))
@@ -187,7 +189,7 @@ qqline(
 )
 ```
 
-Looking at the extremes quantiles of $y_1, \ldots, y_{100} \sim \mbox{Cauchy}(0,1)$ we can see that the majority of the points lay on the theoretical qauntile and their values are near to each other. Nevertheless we notice the presence of some outliers that are very far form the mass of the other points.
+Looking at the quantiles of $y_1, \ldots, y_{100} \sim \mbox{Cauchy}(0,1)$ we can see that the majority of the points lay on the theoretical Q-Q line, with their values near one to each other. Nevertheless we notice that extreme Q-Q points deviate more and more from the theoretically-normal Q-Q line. This is a peculiar consequence less-than-$1/x^2$ decay of its tails, which is also responsible for the non-finiteness of expectation value and variance for such distribution.
 
 ```{r lab_07_b, echo=TRUE}
 # Cauchy
