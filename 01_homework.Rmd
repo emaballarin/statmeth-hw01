@@ -506,6 +506,34 @@ $Var(Z) = E[(Z - E[Z])^{2}] = E[(X - Y - E[X - Y])^{2}] = E[((X - E[X]) - (Y - E
 
 $E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] - 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] = \sigma_{X}^{2} + \sigma_{Y}^{2} - 2 \cdot \sigma_{X, Y}^{2}$
 
+
+**Exercise 1.7**
+
+Let $Y_1$, $Y_2$ and $Y_3$ be independent $N(\mu, \sigma^2)$ r.v.s. Somehow using the matrix
+$$\textbf{W} = \begin{bmatrix} 1/3 & 1/3 & 1/3\\ 2/3 & -1/3 & -1/3\\ -1/3 & 2/3 & -1/3 \end{bmatrix}$$
+show that $\bar{Y} = \sum_{i=1}^3{Y_i/3}$ and $\sum_{i=1}^{3}{(Y_i - \bar{Y})^2}$ are independent random variables.
+
+***Solution (Part 1: rephrasing the exercise)***
+
+We can rephrase and complement the exercise above with a more expressive notation and by adding a row to the matrix provided. Such manipulation of the original text allows for a more direct and  compact solution, while still *embedding* $\textbf{W}$, though not explicitly. Such solution can be seen as a generalization of the suggestion provided by the authors.
+
+Let $Y_1$, $Y_2$ and $Y_3$ be independent $N(\mu, \sigma^2)$ r.v.s. Somehow using the matrix $\textbf{M} = \begin{bmatrix} & \textbf{W} \\ -1/3 & -1/3 & 2/3 \end{bmatrix} = \begin{bmatrix} 1/3 & 1/3 & 1/3\\ 2/3 & -1/3 & -1/3\\ -1/3 & 2/3 & -1/3 \\ -1/3 & -1/3 & 2/3 \end{bmatrix}$ show that $\bar{Y} = \sum_{i=1}^3{Y_i/3}$ and $\sum_{i=1}^{3}{(Y_i - \bar{Y})^2} = \sum_{i=1}^{3}{(V_i)^2}$ are independent random variables.
+
+As such, the exercise can be solved as follows.
+
+***Solution (Part 2: actual solution)***
+
+First, consider the r.v.s $Y_1$, $Y_2$ and $Y_3$ as the coordinates of a random vector $\textbf{Y} = \begin{bmatrix} Y_1\\ Y_2\\ Y_3 \end{bmatrix}$ whose distribution is the Multivariate Normal of *i.i.d.* variables, with mean (vector) $\boldsymbol{\mu} = \begin{bmatrix} \mu\\ \mu\\ \mu \end{bmatrix}$  and covariance matrix $\boldsymbol{\Sigma} = \begin{bmatrix} \sigma^2 & 0 & 0\\ 0 & \sigma^2 & 0\\ 0 & 0 &\sigma^2 \end{bmatrix}$.
+
+Then, by computing symbolically a matrix-vector product, we can show that $\textbf{S} = \textbf{M}\times\textbf{Y} = \begin{bmatrix} {Y_1 + Y_2 + Y_3}\over{3}\\ {2Y_1 - Y_2 - Y_3}\over{3}\\ {-Y_1 + 2Y_2 - Y_3}\over{3}\\ {-Y_1 - Y_2 + 2Y_3}\over{3} \end{bmatrix} = \begin{bmatrix} \bar{Y}\\ Y_1 - \bar{Y}\\ Y_2 - \bar{Y}\\ Y_3 - \bar{Y} \end{bmatrix} = \begin{bmatrix} \bar{Y}\\ V_1\\ V_2\\ V_3 \end{bmatrix}$.
+
+By the properties of the Multivariate Normal distribution, the random vector $\textbf{S}$ can be shown to be Normally distributed, and with covariance matrix $\boldsymbol{\Sigma'} = \textbf{M} \times \boldsymbol{\Sigma} \times \textbf{M}^{T} = \begin{bmatrix} \times & 0 & 0 & 0\\ 0 & \times & \times & \times\\ 0 & \times &\times & \times \end{bmatrix}$ where the $\times$ symbol as a matrix element has been used as a generic placeholder. So-marked element, as well as the mean vector of such distribution are irrelevant w.r.t. the problem at hand.
+
+From the $\boldsymbol{\Sigma'}$ matrix above, and from their normality, we can notice that the variables $\bar{Y}$, $V_1$, $V_2$ and $V_3$ are normally-distributed and that $\bar{Y}$ is pairwise-uncorrelated to $V_1$, $V_2$ and $V_3$. This (in the case of a multinormal distribution only, which is our case) implies also independence (pairwise, among $\bar{Y}$ and the set of $V_1$, $V_2$ and $V_3$).
+
+From the transitivity of pairwise-independence among sets of random variables through set-closed arithmetic operations, we can conclude that also $\sum_{i=1}^{3}{(V_i)^2}$ is independent from $\bar{Y}$.
+
+
 **Exercise 1.8**
 
 If $log(X)∼N(\mu, \sigma^{2})$, find the *pdf* of $X$.
