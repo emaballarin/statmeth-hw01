@@ -1,5 +1,3 @@
-par(mfrow = c(2, 1))
-
 # Hyperparameters
 k <- 3
 p <- 0.08

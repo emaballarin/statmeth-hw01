@@ -1,3 +1,9 @@
+#
+# Please, note that this file is copy-pasted in the report Rmd. Keep them in sync!
+#
+
+# PORTION 01 -->
+
 par(mfrow = c(1, 3))
 n <- 100
 
@@ -59,6 +65,10 @@ qqline(
     col = "red"
 )
 
+# <-- PORTION 01
+
+
+# PORTION 02 -->
 
 # Cauchy
 y4 <- rcauchy(100, 0, 1)
@@ -77,3 +87,5 @@ qqline(
         qcauchy(p, 0, 1),
     col = "red"
 )
+
+# <-- PORTION 02

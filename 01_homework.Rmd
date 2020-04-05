@@ -50,7 +50,7 @@ local({
 
 **Exercise 1**
 
-- Write a function $\mathsf{binomial(x,n,p)}$ for the binomial distribution above, depending on parameters $\mathsf{x,n,p}$, and test it with some prespecified values. Use the function $\mathsf{choose()}$ for the binomial coefficient.
+- Write a function `binomial(x,n,p)` for the binomial distribution above, depending on parameters `x`, `n`, `p`, and test it with some prespecified values. Use the function `choose()` for the binomial coefficient.
 
 - Plot two binomials with $n=20$, and $p=0.3, 0.6$ respectively.
 
@@ -61,11 +61,11 @@ local({
 
 **Exercise 2**
 
-Generate in $\mathsf{R}$ the same output, but using $\mathsf{rgeom()}$ for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
+Generate in `R` the same output, but using `rgeom()` for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
 
 ***Solution***
 
-We can obtain the Binomial pdf $Binom(r, k, p)$ as the sum of $k$ iid Geometrical distributions $Geom(r, p)$ with same $p$ and $r$.
+We can obtain the Binomial *pdf* $Binom(r, k, p)$ as the sum of $k$ iid Geometrical distributions $Geom(r, p)$ with same $p$ and $r$.
 
 ```{r lab_02, code = readLines("src/lab_02.R"), echo=TRUE}
 ```
@@ -73,7 +73,7 @@ We can obtain the Binomial pdf $Binom(r, k, p)$ as the sum of $k$ iid Geometrica
 
 **Exercise 3**
 
-- Show in $\mathsf{R}$, also graphically, that $\mbox{Gamma}(n/2, 1/2)$ coincides with a $\chi^{2}_{n}$.
+- Show in `R`, also graphically, that $\mbox{Gamma}(n/2, 1/2)$ coincides with a $\chi^{2}_{n}$.
 
 - Find the 5\% and the 95\% quantiles of a $\mbox{Gamma}(3,3)$.
 
@@ -93,7 +93,7 @@ Generate $n=1000$ values from a $\mbox{Beta}(5,2)$ and compute the sample mean a
 
 **Exercise 5**
 
-Show with a simple $\mathsf{R}$ function that a negative binomial distribution may be seen as a mixture between a Poisson and a Gamma. In symbols: $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \ldots$.
+Show with a simple `R` function that a negative binomial distribution may be seen as a mixture between a Poisson and a Gamma. In symbols: $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta)$, then $X \sim \ldots$.
 
 ***Solution***
 
@@ -105,7 +105,7 @@ We can see that if $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta
 
 **Exercise 6**
 
-Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\mathsf{R}$ function for the empirical cumulative distribution function and reproduce the two plots above.
+Instead of using the built-in function `ecdf()`, write your own `R` function for the empirical cumulative distribution function and reproduce the two plots above.
 
 ***Solution***
 ```{r lab_06, code = readLines("src/lab_06.R"), echo=TRUE}
@@ -114,7 +114,7 @@ Instead of using the built-in function $\mathsf{ecdf()}$, write your own $\maths
 
 **Exercise 7**
 
-Compare in $\mathsf{R}$ the assumption of normality for these samples:
+Compare in `R` the assumption of normality for these samples:
 
 - $y_1, \ldots, y_{100} \sim t_{\nu},$ with $\nu=5,20, 100$. What does it happens when the number of degrees of freedom $\nu$ increases?
 
@@ -124,41 +124,94 @@ Compare in $\mathsf{R}$ the assumption of normality for these samples:
 
 In order to compare the assumption of normality you can use the Q-Q plot.
 
-```{r ex7_a,  echo=TRUE}
-par(mfrow=c(1,3))
+```{r lab_07_a,  echo=TRUE}
+par(mfrow = c(1, 3))
 n <- 100
-y <- rt(n, df=5)
-qqplot(qt(ppoints(n), df=5), y,
-       xlab="True quantiles", ylab="Sample quantiles",
-       main = "Q-Q plot for t-student(5): n=100")
-qqline(y, distribution = function(p) qt(p, df = 5), col="red")
 
+
+# t-Student df = 5
+y <- rt(n, df = 5)
+qqplot(
+    qt(ppoints(n), df = 5),
+    y,
+    xlab = "True quantiles",
+    ylab = "Sample quantiles",
+    main = "Q-Q plot for t-student(5): n=100",
+    ylim = c(-5, 5),
+    xlim = c(-5, 5)
+)
+
+qqline(
+    y,
+    distribution = function(p)
+        qt(p, df = 5),
+    col = "red"
+)
+
+
+# t-Student df = 20
 y2 <- rt(100, 20)
-qqplot(qt(ppoints(n),20),y2,
-       xlab="True quantiles", ylab="Sample quantiles",
-       main = "Q-Q plot for t-student(20): n=100")
-qqline(y2, distribution = function(p) qt(p, df = 20), col="red")
+qqplot(
+    qt(ppoints(n), 20),
+    y2,
+    xlab = "True quantiles",
+    ylab = "Sample quantiles",
+    main = "Q-Q plot for t-student(20): n=100",
+    ylim = c(-5, 5),
+    xlim = c(-5, 5)
+)
+qqline(
+    y2,
+    distribution = function(p)
+        qt(p, df = 20),
+    col = "red"
+)
 
+
+# t-Student df = 100
 y3 <- rt(100, 100)
-qqplot(qt(ppoints(n),100),y3,
-       xlab="True quantiles", ylab="Sample quantiles",
-       main = "Q-Q plot for t-student(100): n=100")
-qqline(y3, distribution = function(p) qt(p, df = 100), col="red")
+qqplot(
+    qt(ppoints(n), 100),
+    y3,
+    xlab = "True quantiles",
+    ylab = "Sample quantiles",
+    main = "Q-Q plot for t-student(100): n=100",
+    ylim = c(-5, 5),
+    xlim = c(-5, 5)
+)
+qqline(
+    y3,
+    distribution = function(p)
+        qt(p, df = 100),
+    col = "red"
+)
 ```
 
 Looking at the extremes quantiles of $y_1, \ldots, y_{100} \sim \mbox{Cauchy}(0,1)$ we can see that the majority of the points lay on the theoretical qauntile and their values are near to each other. Nevertheless we notice the presence of some outliers that are very far form the mass of the other points.
 
-```{r ex7_b,  echo=TRUE}
-y4 <- rcauchy(x, 0, 1)
-qqplot(qcauchy(ppoints(n),0, 1),y4,
-       xlab="True quantiles", ylab="Sample quantiles",
-       main = "Q-Q plot for Cauchy(0,1): n=100")
-qqline(y4, distribution = function(p) qcauchy(p, 0, 1), col="red")
+```{r lab_07_b, echo=TRUE}
+# Cauchy
+y4 <- rcauchy(100, 0, 1)
+
+qqplot(
+    qcauchy(ppoints(n), 0, 1),
+    y4,
+    xlab = "True quantiles",
+    ylab = "Sample quantiles",
+    main = "Q-Q plot for Cauchy(0,1): n=100"
+)
+
+qqline(
+    y4,
+    distribution = function(p)
+        qcauchy(p, 0, 1),
+    col = "red"
+)
 ```
 
 **Exercise 8**
 
-Write a general $\mathsf{R}$ function for checking the validity of the central limit theorem. *Hint* The function will consist of two parameters: clt_function <- function($\mathsf{n}$, $\mathsf{distr}$), where the first one is the sampe size and the second one is the kind of distribution from which you generate. Use plots for visualizing the results.
+Write a general `R` function for checking the validity of the central limit theorem. *Hint* The function will consist of two parameters: `clt_function <- function(n, distr)`, where the first one is the sample size and the second one is the kind of distribution from which you generate. Use plots for visualizing the results.
 
 ***Solution***
 ```{r lab_08, code = readLines("src/lab_08.R"), echo=TRUE}
@@ -166,14 +219,57 @@ Write a general $\mathsf{R}$ function for checking the validity of the central l
 
 # ***DAAG*** EXERCISES
 
+**Exercise 11**
+
+***Solution***
+
+We show below the provided code fragments, their output and an explanation.
+
+A vector of `factor`s composed of 91 `female` and 92 `male` elements is created. The `table` command shows such result, according to the order of definition. 
+
+```{r daag_11_a}
+gender <- factor(c(rep("female", 91), rep("male", 92)))
+table(gender)
+```
+
+As the `levels` grouping is specified, with `male` first and `female` second, the `table` command adapts its output accordingly.
+
+```{r daag_11_b}
+gender <- factor(gender, levels=c("male", "female"))
+table(gender)
+```
+
+Because of a case-mistake, we define a `level` which does not match any `factor` present in the vector. The "Male" column (should have been "male") is empty.
+
+```{r daag_11_c}
+# Notice the mistake! "Male" should be "male".
+gender <- factor(gender, levels=c("Male", "female"))
+table(gender)
+```
+
+In the following, the `table` command is instructed to explicitly group `NA` (not available) data (in this case w.r.t. the `levels` provided) as a separate, visible level.
+
+```{r daag_11_d}
+table(gender, exclude=NULL)
+```
+
+```{r daag_11_e}
+rm(gender)
+```
+
+
 **Exercise 15**
 
 The data frame socsupport (DAAG) has data from a survey on social and other kinds of
 support, for a group of university students. It includes Beck Depression Inventory (BDI) scores.
 
 The following are two alternative plots of BDI against age:\
-plot(BDI ˜ age, data=socsupport)\
-plot(BDI ˜ unclass(age), data=socsupport)\
+
+```
+plot(BDI ~ age, data=socsupport)
+plot(BDI ~ unclass(age), data=socsupport)
+```
+
 For examination of cases where the score seems very high, which plot is more useful? Explain.
 
 Why is it necessary to be cautious in making anything of the plots for students in the three oldest age categories (25-30, 31-40, 40+)?
@@ -181,15 +277,21 @@ Why is it necessary to be cautious in making anything of the plots for students 
 ***Solution***
 
 For examination of cases where the score seems very high it could be better the second plot. Both the plots show how the observations, groupped by age, are distributed among the score of BDI. Nevertheless thanks to the ungroupping procedure, in the second plot it is also possible to see the numerosity of each group. In this way it is possible to understand how much reliable are the data of each group.
-```{r DAAGex15_a,  echo=TRUE}
+
+```{r daag_15_a, echo=TRUE}
 library(DAAG)
+library(lattice)
 data(socsupport)
+
 par(mfrow=c(1,2))
-plot(BDI ~ age, data=socsupport)
-plot(BDI ~ unclass(age), data=socsupport)
+
+plot(BDI ~ age, data = socsupport)           # Some linters may complain: that's fine.
+plot(BDI ~ unclass(age), data = socsupport)  # Some linters may complain: that's fine.
 ```
+
 It is necessary to be cautious in making anythig of the plots for students in the tree oldest age categories because, as we can see from the summary, there are very few data for those classes. Hence the data can be not representative for the students of that age.
-```{r DAAGex15_b,  echo=TRUE}
+
+```{r daag_15_b,  echo=TRUE}
 summary(socsupport$age)
 ```
 
@@ -197,35 +299,29 @@ summary(socsupport$age)
 
 Given a vector x, the following demonstrates alternative ways to create a vector of numbers
 from 1 through n, where n is the length of the vector:\
-x <- c(8, 54, 534, 1630, 6611)\
-seq(1, length(x))\
-seq(along=x)
 
-Now set x <- NULL and repeat each of the calculations seq(1, length(x)) and
-seq(along=x). Which version of the calculation should be used in order to return a vector
-of length 0 in the event that the supplied argument is NULL.
+```
+x <- c(8, 54, 534, 1630, 6611)
+seq(1, length(x))
+seq(along=x)
+```
+
+Now set `x <- NULL` and repeat each of the calculations `seq(1, length(x))` and
+`seq(along=x)`. Which version of the calculation should be used in order to return a vector
+of length 0 in the event that the supplied argument is `NULL`.
 
 ***Solution***
 
-In order to return a vector of length 0 in the event that the supplied argument is NULL, you have to use the sintax seq(along=x).\
-Writing seq(1, length(x)) 1 is interpreted as the starting value of the sequance and length(x), that is equal to 0, as the end value of the sequence. Since the default value of the paramether by is ((to - from)/(length.out - 1)), that in this case is equal to -1, a vector of two elements, 1 and 0, is created.
+In order to return a vector of length 0 in the event that the supplied argument is NULL, you have to use the syntax `seq(along=x)`.\
+Writing `seq(1, length(x))`, 1 is interpreted as the starting value of the sequance and `length(x)`, that is equal to 0, as the end value of the sequence. Since the default value of the paramether by is `((to - from)/(length.out - 1))`, that in this case is equal to -1, a vector of two elements, 1 and 0, is created.
 
-```{r DAAGex17,  echo=TRUE}
-x <- c(8, 54, 534, 1630, 6611)
-seq(1, length(x))
-seq(along = x)
-
-x <- NULL
-seq(1, length(x))
-length(seq(1, length(x)))
-seq(along=x)
-length(seq(along = x))
+```{r daag_17, code = readLines("src/daag_17.R"), echo=TRUE}
 ```
 
 **Exercise 20**
 
-The help page for iris (type help(iris)) gives code that converts the data in
-iris3 (datasets package) to case-by-variable format, with column names “Sepal.Length” “Sepal.Width”, “Petal.Length”, “Petal.Width”, and “Species”. Look up the help pages for the
+The help page for iris `(type help(iris))` gives code that converts the data in
+iris3 (datasets package) to case-by-variable format, with column names `Sepal.Length` `Sepal.Width`, `Petal.Length`, `Petal.Width`, and `Species`. Look up the help pages for the
 functions that are used, and make sure that you understand them. Then add annotation to this
 code that explains each step in the computation.
 
@@ -289,9 +385,111 @@ all.equal(ii, iris) # compare the created object and iris
 
 # ***CS*** EXERCISES
 
+**Exercise 1.1**
+
+Exponential random variable, $X \geq 0$, has *pdf* $f(x) = \lambda \cdot \ e^{−\lambda x}$.
+1. Find the *cdf* and the quantile function for $X$.
+2. Find $Pr(X < \lambda)$ and the median of $X$.
+3. Find the mean and variance of $X$.
+
+***Solution***
+
+1. The *pdf* is:
+$$
+f(x)=\begin{cases}
+              \lambda e^{-\lambda x} &x\geq0
+              \\x=0                  &x<0
+              \end{cases}
+$$
+              
+We know that the *cdf* is $F(x)=Pr(x\leq X)$, so we can compute:
+$$
+F(x)=\int_{-\infty}^{0} f(x)dx+\int_{0}^{X}f(x)dx=
+       \int_{0}^{\infty}\lambda e^{-\lambda x}dx=[-e^{-\lambda x}]_{0}^{X}=
+       e^{-\lambda 0}+e^{-\lambda X}= 
+       1+e^{-\lambda X}
+$$
+
+The quantile function instead is its inverse, so we have:
+
+$$
+F=1-e^{-\lambda Q} \ \Rightarrow \ 
+1-F=e^{\lambda Q} \ \Rightarrow \ 
+Q=-\frac{ln(1-F)}{\lambda} 
+$$
+           
+2. We know that $F(\lambda)=Pr(x \leq \lambda)$ so we can compute:
+$$
+F(\lambda)=-e^{\lambda^2}
+$$
+The median is:
+$$
+\int_{m}^{-\infty} f(x)dx = \frac{1}{2} =\int_{+\infty}^{m}f(x)dx\Rightarrow 
+[-e^{-\lambda x}]_{+\infty}^{m}=\frac{1}{2} \Rightarrow
+-e^{-\lambda m}=\frac{1}{2}\Rightarrow
+m=\frac{ln(2)}{\lambda}
+$$
+
+3.the mean is:
+$$
+E[x]=\int_{-\infty}^{+\infty}x f(x)dx=
+\int_{-\infty}^{0}x f(x)dx+\int_{0}^{+\infty}x f(x)dx=
+\int_{0}^{+\infty}x f(x)dx=
+\int_{0}^{+\infty}x \lambda e^{-\lambda x}dx
+$$
+By using integration by parts, then:
+
+$$
+g'(x)=\lambda e^{-\lambda x} \ \ g(x)=-e^{-\lambda x}\\
+f'(x)=1 \ \ f(x)= x  \\
+\int_{-\infty}^{0} g'(x)f(x)dx = g(x)f(x) - \int_{0}^{+\infty} g(x) f'(x)dx
+$$
+And thus we obtain:
+$$
+E[x]=[-xe^{-\lambda x}]_{-\infty}^{0}+\int_{-\infty}^{0}e^{-\lambda x}dx=\left[\frac{e^{-\lambda x}dx}{\lambda}\right]_{-\infty}^{0}=\frac{1}{\lambda}
+$$
+For what concernes the computation of the variance, we have that if the distribution admits finite variance, that implies the existance of $E[x]$ and $var(x)=E(x^2)-E(x)^2$.
+$$
+E(X^2)=\int_{0}^{+\infty}x^2 \lambda e^{-\lambda x}dx
+$$
+By using integration by parts, we let
+
+$$
+g'(x)=\lambda e^{-\lambda x} \ \ g(x)=-e^{-\lambda x}\\
+f'(x)=2x \ \ f(x)= x^2  \\
+$$
+
+And then,
+$$
+E[x^2]=[-x^2e^{-\lambda x}]_{-\infty}^{0}+\int_{-\infty}^{0} 2x e^{-\lambda x}dx=\frac{2}{\lambda^2}
+$$
+because we know that $\int_{-\infty}^{0} x e^{-\lambda x}dx=\frac{1}{\lambda}E(x)$.
+
+
+**Exercise 1.2**
+
+Evaluate $Pr(X < 0.5, Y < 0.5)$ if $X$ and $Y$ have joint *pdf* (1.2).
+
+***Solution***
+
+Let 
+$$
+f (x, y) =\begin{cases}
+              x + \frac{3y^2} {2} &0<x<1 \wedge 0<y<1 \\
+              0                 &\text{otherwise}
+              \end{cases}
+$$
+
+$$ 
+Pr(X < 0.5, Y < 0.5)=\int_{0}^{0.5}\int_{0}^{0.5}x + \frac{3y^2} {2}dxdy=
+\int_{0}^{0.5}xdx+\int_{0}^{0.5}\frac{3y^2} {2}dy=
+\left[\frac{x^2}{2}\right]_{0}^{0.5}+\left[y^3\right]_{0}^{0.5}=0.25
+$$
+
+
 **Exercise 1.6**
 
-Let $X$ and $Y$ be non-independent random variables, such that $var(X) =σ_{X}^{2}$, $var(Y)=σ_{Y}^{2}$ and $cov(X, Y) =σ_{X, Y}^{2}$. 
+Let $X$ and $Y$ be non-independent random variables, such that $var(X) =\sigma_{X}^{2}$, $var(Y)=\sigma_{Y}^{2}$ and $cov(X, Y) =\sigma_{X, Y}^{2}$. 
 Using the result from Section 1.6.2, find $var(X+Y)$ and $var(X−Y)$.
 
 ***Solution***
@@ -310,21 +508,21 @@ $E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] - 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] 
 
 **Exercise 1.8**
 
-If $log(X)∼N(μ, σ^{2})$, find the p.d.f. of $X$.
+If $log(X)∼N(\mu, \sigma^{2})$, find the *pdf* of $X$.
 
 ***Solution***
 
-From the Transformation Theorem for r.v. we can define the c.d.f.:
+From the Transformation Theorem for r.v. we can define the *cdf*:
 
 $F_{log(X)}(x) = P(log(X) \leq x) = P(X \leq e^{x}) = F_{X}(e^{x}) = \int_{0}^{e^{x}} \frac{1}{\sqrt{2 \cdot \pi \cdot \sigma^{2}}} \cdot e^{- \frac{(t - \mu)^{2}}{2}} \space dt$.
 
-And also the p.d.f.:
+And also the *pdf*:
 
 $f_{X}(x) = \frac{d F_{X}(e^{x})}{dx} = \frac{1}{\sqrt{2 \cdot \pi \cdot \sigma^{2}}} \cdot e^{- \frac{(e^{x} - \mu)^{2}}{2}}$.
 
 **Exercise 1.9**
 
-Discrete random variable $Y$ has a Poisson distribution with parameter $λ$ if its p.d.f. is $f(y) =λ \cdot y \cdot e^{- \frac{\lambda}{y!}}$, for $y= 0,1, \dots$
+Discrete random variable $Y$ has a Poisson distribution with parameter $λ$ if its *pdf* is $f(y) =λ \cdot y \cdot e^{- \frac{\lambda}{y!}}$, for $y= 0,1, \dots$
 
 a) Find the moment generating function for $Y$ (hint: the power series repre-sentation of the exponential function is useful).
 
@@ -332,22 +530,22 @@ b) If $Y_{1}∼Poi(λ_{1})$ and independently $Y_{2}∼Poi(λ_{2})$ deduce the d
 
 c) Making use of the previous result and the central limit theorem, deduce the normal approximation to the Poisson distribution.
 
-d) Confirm the previous result graphically, using R functions dpois, dnorm, plotorbarplotandlines. Confirm that the approximation improves with increasing $λ$.
+d) Confirm the previous result graphically, using `R` functions dpois, dnorm, plotorbarplotandlines. Confirm that the approximation improves with increasing $λ$.
 
 ***Solution***
 
 ***a)***
-The momenti generating function (mgf) is defined as:
+The moment generating function (*mgf*) is defined as:
 $G_{Y}(t) = E[e^{t \cdot Y}] = \sum_{i = 1}^{n} p_{i} \cdot e^{t \cdot Y_{i}}$.
 
-  In case of discrete distribution, so the mgf for the Poisson distribution is the following one:
+  In case of discrete distribution, so the *mgf* for the Poisson distribution is the following one:
   $G_{Y}(t) = \sum_{i = 0}^{\infty} e^{t \cdot i} \cdot \lambda^{i} \cdot \frac{e^{-\lambda}}{i!} = e^{-\lambda} \cdot \sum_{i = 0}^{\infty} \frac{(\lambda \cdot e^{t})^{i}}{i!} = e^{-\lambda} \cdot e^{\lambda \cdot e^{t}} = e^{\lambda \cdot (e^{t} - 1)}$
 
 ***b)***
-Here we can apply the mgf property with indipendent random variables:
+Here we can apply the *mgf* property with indipendent random variables:
 $G_{Y_{1} + Y_{2}}(t) = G_{Y_{1}}(t) \cdot G_{Y_{2}}(t) = e^{\lambda_{1} \cdot (e^{t} - 1)} \cdot e^{\lambda_{2} \cdot (e^{t} - 1)} = e^{(\lambda_{1} + \lambda_{2}) \cdot (e^{t}-1)}$
 
-Note that this is the mfg of a Poinsson distribution with $\lambda = \lambda_{1} + \lambda_{2}$.
+Note that this is the mfg of a Poisson distribution with $\lambda = \lambda_{1} + \lambda_{2}$.
 
 ***c)***
 Note that $X_{n} ~ Poi(n)$ and consider the standardized Poisson $\frac{X_{n}-n}{\sqrt{n}}$, then:
@@ -358,7 +556,7 @@ $\lim_{n \rightarrow\infty} e^{- t\cdot \sqrt{n}} \cdot e^{n \cdot (e^{\frac{t}{
 
 $\lim_{n \rightarrow\infty} e^{-t \cdot \sqrt{n} + t \cdot \sqrt{n} + \frac{t^{2}}{2} + \frac{t^{3}}{6 \cdot \sqrt{n}} + \cdots} = \lim_{n \rightarrow\infty} e^{\frac{t^{2}}{2}} \cdot e^{(\frac{t^{3}}{6 \cdot \sqrt{n}} + \cdots)} = e^{\frac{t^{2}}{2}}$
 
-Where $e^{\frac{t^{2}}{2}}$ is the mgf of the standard normal distribution. 
+Where $e^{\frac{t^{2}}{2}}$ is the *mgf* of the Standard Normal distribution. 
 
 ***d)***
 ```{r cs_1.9, code = readLines("src/cs_1.9.R"), echo=TRUE}
