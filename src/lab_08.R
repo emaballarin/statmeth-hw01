@@ -11,7 +11,7 @@ clt_function <- function(n, dist) {
         "tstudent" = rt(x, 5)
     )
 
-    # plot the distribution of the mean of the observations
+    # Plot the distribution of the mean of the observations
     hist(
         sample,
         freq = FALSE,
@@ -19,7 +19,6 @@ clt_function <- function(n, dist) {
         border = "red",
         nclass = 50
     )
-    # plot(density(sample), col="red", lwd = 1, main ="CLT")
 
     # Normal
     mu <- mean(sample)

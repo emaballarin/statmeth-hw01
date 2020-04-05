@@ -11,7 +11,6 @@ plot(0:upbound,
 
 
 # As sum of k Geometric rvs, via histogram estimation with count averaging
-
 avg_factor <- 1500  # A good...
 bin_fact <- 1       # ... compromise.
 seq_stencil <- seq(from = 0, to = upbound, by = bin_fact)

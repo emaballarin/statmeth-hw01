@@ -1,8 +1,7 @@
 # Function
 binomial <- function(x, n, p)
 {
-    prob <- choose(n, x) * p ^ x * (1 - p) ^ (n - x)
-    return(prob)
+    return(choose(n, x) * p ^ x * (1 - p) ^ (n - x))
 }
 
 # Test the function

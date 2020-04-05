@@ -50,7 +50,7 @@ local({
 
 **Exercise 1**
 
-- Write a function `binomial(x,n,p)` for the binomial distribution above, depending on parameters `x`, `n`, `p`, and test it with some prespecified values. Use the function `choose()` for the binomial coefficient.
+- Write a function `binomial(x,n,p)` for the binomial distribution, depending on parameters `x`, `n`, `p`, and test it with some prespecified values. Use the function `choose()` for the binomial coefficient.
 
 - Plot two binomials with $n=20$, and $p=0.3, 0.6$ respectively.
 
@@ -61,7 +61,7 @@ local({
 
 **Exercise 2**
 
-Generate in `R` the same output, but using `rgeom()` for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
+Generate in `R` the same output shown in the Lab lecture for the Negative Binomial distribution, but using `rgeom()` for generating the random variables. *Hint*: generate $n$ times three geometric distribution $X_1,\ldots, X_3$ with $p=0.08$, store them in a matrix and compute then the sum $Y$. 
 
 ***Solution***
 
@@ -105,7 +105,7 @@ We can see that if $X|Y \sim \mathcal{P}(Y)$, $Y \sim \mbox{Gamma}(\alpha, \beta
 
 **Exercise 6**
 
-Instead of using the built-in function `ecdf()`, write your own `R` function for the empirical cumulative distribution function and reproduce the two plots above.
+Instead of using the built-in function `ecdf()`, write your own `R` function for the empirical cumulative distribution function and reproduce the two plots shown during the Lab lecture.
 
 ***Solution***
 ```{r lab_06, code = readLines("src/lab_06.R"), echo=TRUE}
@@ -225,7 +225,7 @@ Write a general `R` function for checking the validity of the central limit theo
 
 ***Solution***
 
-We show below the provided code fragments, their output and an explanation.
+We show below: the provided code fragments, their output, and a possible explanation.
 
 A vector of `factor`s composed of 91 `female` and 92 `male` elements is created. The `table` command shows such result, according to the order of definition. 
 
@@ -262,7 +262,7 @@ rm(gender)
 
 **Exercise 15**
 
-The data frame socsupport (DAAG) has data from a survey on social and other kinds of
+The data frame `socsupport` (from the `DAAG` package) has data from a survey on social and other kinds of
 support, for a group of university students. It includes Beck Depression Inventory (BDI) scores.
 
 The following are two alternative plots of BDI against age:\
@@ -278,7 +278,7 @@ Why is it necessary to be cautious in making anything of the plots for students 
 
 ***Solution***
 
-For examination of cases where the score seems very high it could be better the second plot. Both the plots show how the observations, groupped by age, are distributed among the score of BDI. Nevertheless thanks to the ungroupping procedure, in the second plot it is also possible to see the numerosity of each group. In this way it is possible to understand how much reliable are the data of each group.
+For examination of cases where the score seems to be very high, the second plot could be better. Both plots show how the observations, grouped by age, are distributed w.r.t. the score of BDI. Nevertheless thanks to the ungrouping procedure, in the second plot it is also possible to see the numerosity of each group. In this way it is possible to determine how reliable can be the data for each group.
 
 ```{r daag_15_a, echo=TRUE}
 library(DAAG)
@@ -291,7 +291,7 @@ plot(BDI ~ age, data = socsupport)           # Some linters may complain: that's
 plot(BDI ~ unclass(age), data = socsupport)  # Some linters may complain: that's fine.
 ```
 
-It is necessary to be cautious in making anythig of the plots for students in the tree oldest age categories because, as we can see from the summary, there are very few data for those classes. Hence the data can be not representative for the students of that age.
+It is necessary to be cautious in making anythig of the plots for students in the tree oldest age categories because, as we can see from the summary, there are very few data for those classes. Hence the data can be not-representative for the students of that age.
 
 ```{r daag_15_b,  echo=TRUE}
 summary(socsupport$age)
@@ -299,8 +299,8 @@ summary(socsupport$age)
 
 **Exercise 17**
 
-Given a vector x, the following demonstrates alternative ways to create a vector of numbers
-from 1 through n, where n is the length of the vector:\
+Given a vector `x`, the following demonstrates alternative ways to create a vector of numbers
+from $1$ through $n$, where $n$ is the length of the vector:\
 
 ```
 x <- c(8, 54, 534, 1630, 6611)
@@ -314,16 +314,16 @@ of length 0 in the event that the supplied argument is `NULL`.
 
 ***Solution***
 
-In order to return a vector of length 0 in the event that the supplied argument is NULL, you have to use the syntax `seq(along=x)`.\
-Writing `seq(1, length(x))`, 1 is interpreted as the starting value of the sequance and `length(x)`, that is equal to 0, as the end value of the sequence. Since the default value of the paramether by is `((to - from)/(length.out - 1))`, that in this case is equal to -1, a vector of two elements, 1 and 0, is created.
+In order to return a vector of length 0 in the event that the supplied argument is `NULL`, you have to use the syntax `seq(along=x)`.\
+In writing `seq(1, length(x))`, `1` is interpreted as the starting value of the sequence and `length(x)`, that is equal to 0, as the end value of the sequence. Since the default value of the optional parameter `by` is `((to - from)/(length.out - 1))`, that in this case is equal to -1, a vector of two elements, 1 and 0, is created.
 
 ```{r daag_17, code = readLines("src/daag_17.R"), echo=TRUE}
 ```
 
 **Exercise 20**
 
-The help page for iris `(type help(iris))` gives code that converts the data in
-iris3 (datasets package) to case-by-variable format, with column names `Sepal.Length` `Sepal.Width`, `Petal.Length`, `Petal.Width`, and `Species`. Look up the help pages for the
+The help page for `iris` `(type help(iris))` gives code that converts the data in
+`iris3` (`datasets` package) to case-by-variable format, with column names `Sepal.Length` `Sepal.Width`, `Petal.Length`, `Petal.Width`, and `Species`. Look up the help pages for the
 functions that are used, and make sure that you understand them. Then add annotation to this
 code that explains each step in the computation.
 
@@ -334,10 +334,10 @@ library(datasets)
 
 #help(iris)
 
-dni3 <- dimnames(iris3) # save the dimnamens of the object
+dni3 <- dimnames(iris3) # save the dimnames of the object
                         # iris3
 # given that iris3 is a 3-dimensional array 50 x 4 x 3
-# the function dimnamens returns the names of each one
+# the function dimnames returns the names of each one
 # of the 3 dimensions of it. 
 # the output is a list where the first element is null
 # becuse the rows of iris3 have no names
@@ -347,14 +347,14 @@ dni3 <- dimnames(iris3) # save the dimnamens of the object
 
 test <- aperm(iris3, c(1,3,2))
 ii <- data.frame( # create a dataframe from a matrix
-    matrix( # create a matrix form the transpose of
+    matrix( # create a matrix from the transposition of
             # the iris3 array
 
       aperm(iris3, c(1,3,2)), # transpose the 3-d array iris
                               # result: 50 x 3 x 4 array
       ncol = 4, # having 4 columns
 
-      # set the names of the rows and columns of the matrix
+      # set the names of the rows and columns of the matrix;
       dimnames = list(NULL, # create a list, starting from a
                             # NULL object
 
@@ -369,7 +369,7 @@ ii <- data.frame( # create a dataframe from a matrix
                           # dimension of iris3: ("Sepal L."
                           #  "Sepal W." "Petal L." "Petal W.")
 
-    # create a new column of the dataframe called Spieces
+    # create a new column of the dataframe called Species
     Species = gl( # generate factors given:
       3, 50, # the number of levels (=3), the number of
              # replications (=50)
@@ -390,13 +390,14 @@ all.equal(ii, iris) # compare the created object and iris
 **Exercise 1.1**
 
 Exponential random variable, $X \geq 0$, has *pdf* $f(x) = \lambda \cdot \ e^{−\lambda x}$.
-1. Find the *cdf* and the quantile function for $X$.
-2. Find $Pr(X < \lambda)$ and the median of $X$.
-3. Find the mean and variance of $X$.
+
+1. Find the *cdf* and the quantile function for $X$.  
+2. Find $Pr(X < \lambda)$ and the median of $X$.  
+3. Find the mean and variance of $X$.  
 
 ***Solution***
 
-1. The *pdf* is:
+1.  The *pdf* for $X$ is:
 $$
 f(x)=\begin{cases}
               \lambda e^{-\lambda x} &x\geq0
@@ -404,12 +405,12 @@ f(x)=\begin{cases}
               \end{cases}
 $$
               
-We know that the *cdf* is $F(x)=Pr(x\leq X)$, so we can compute:
+We know that its *cdf* is $F(x)=Pr(x\leq X)$, so we can compute for $x \geq 0$:
 $$
 F(x)=\int_{-\infty}^{0} f(x)dx+\int_{0}^{X}f(x)dx=
-       \int_{0}^{\infty}\lambda e^{-\lambda x}dx=[-e^{-\lambda x}]_{0}^{X}=
-       e^{-\lambda 0}+e^{-\lambda X}= 
-       1+e^{-\lambda X}
+       \int_{0}^{X}\lambda e^{-\lambda x}dx=[-e^{-\lambda x}]_{0}^{X}=
+       e^{-\lambda 0}-e^{-\lambda X}= 
+       1-e^{-\lambda X}
 $$
 
 The quantile function instead is its inverse, so we have:
@@ -422,13 +423,13 @@ $$
            
 2. We know that $F(\lambda)=Pr(x \leq \lambda)$ so we can compute:
 $$
-F(\lambda)=-e^{\lambda^2}
+F(\lambda)=1-e^{\lambda^2}
 $$
 The median is:
 $$
-\int_{m}^{-\infty} f(x)dx = \frac{1}{2} =\int_{+\infty}^{m}f(x)dx\Rightarrow 
-[-e^{-\lambda x}]_{+\infty}^{m}=\frac{1}{2} \Rightarrow
--e^{-\lambda m}=\frac{1}{2}\Rightarrow
+\int_{-\infty}^{m} f(x)dx = \frac{1}{2} =\int_{m}^{+\infty}f(x)dx\Rightarrow 
+[1-e^{-\lambda x}]_{m}^{+\infty}=\frac{1}{2} \Rightarrow
+e^{-\lambda m}=\frac{1}{2}\Rightarrow
 m=\frac{ln(2)}{\lambda}
 $$
 
@@ -444,15 +445,15 @@ By using integration by parts, then:
 $$
 g'(x)=\lambda e^{-\lambda x} \ \ g(x)=-e^{-\lambda x}\\
 f'(x)=1 \ \ f(x)= x  \\
-\int_{-\infty}^{0} g'(x)f(x)dx = g(x)f(x) - \int_{0}^{+\infty} g(x) f'(x)dx
+\int_{0}^{+\infty} g'(x)f(x)dx = g(x)f(x) - \int_{0}^{+\infty} g(x) f'(x)dx
 $$
 And thus we obtain:
 $$
-E[x]=[-xe^{-\lambda x}]_{-\infty}^{0}+\int_{-\infty}^{0}e^{-\lambda x}dx=\left[\frac{e^{-\lambda x}dx}{\lambda}\right]_{-\infty}^{0}=\frac{1}{\lambda}
+E[x]=[-xe^{-\lambda x}]_{0}^{+\infty}+\int_{0}^{+\infty}-e^{-\lambda x}dx=\left[\frac{-e^{-\lambda x}}{\lambda}\right]_{0}^{+\infty}=\frac{1}{\lambda}
 $$
-For what concernes the computation of the variance, we have that if the distribution admits finite variance, that implies the existance of $E[x]$ and $var(x)=E(x^2)-E(x)^2$.
+For what concernes the computation of the variance, we have that if the distribution admits finite variance, that implies the existance of $E[x]$, and $var(x)=E[x^2]-E[x]^2$.
 $$
-E(X^2)=\int_{0}^{+\infty}x^2 \lambda e^{-\lambda x}dx
+E[x^2]=\int_{0}^{+\infty}x^2 \lambda e^{-\lambda x}dx
 $$
 By using integration by parts, we let
 
@@ -463,14 +464,16 @@ $$
 
 And then,
 $$
-E[x^2]=[-x^2e^{-\lambda x}]_{-\infty}^{0}+\int_{-\infty}^{0} 2x e^{-\lambda x}dx=\frac{2}{\lambda^2}
+E[x^2]=[-x^2e^{-\lambda x}]_{0}^{+\infty}+\int_{0}^{+\infty} 2x e^{-\lambda x}dx=\frac{2}{\lambda^2}
 $$
-because we know that $\int_{-\infty}^{0} x e^{-\lambda x}dx=\frac{1}{\lambda}E(x)$.
+because we know that $\int_{0}^{+\infty} x e^{-\lambda x}dx=\frac{1}{\lambda^2}$.
+
+Thus, it directly follows that $var(x)=E[x^2]-E[x]^2 = {{1}\over{\lambda^2}}$
 
 
 **Exercise 1.2**
 
-Evaluate $Pr(X < 0.5, Y < 0.5)$ if $X$ and $Y$ have joint *pdf* (1.2).
+Evaluate $Pr(X < 0.5, Y < 0.5)$ if $X$ and $Y$ have joint *pdf* given (see below).
 
 ***Solution***
 
@@ -484,10 +487,13 @@ $$
 
 $$ 
 Pr(X < 0.5, Y < 0.5)=\int_{0}^{0.5}\int_{0}^{0.5}x + \frac{3y^2} {2}dxdy=
-\int_{0}^{0.5}xdx+\int_{0}^{0.5}\frac{3y^2} {2}dy=
-\left[\frac{x^2}{2}\right]_{0}^{0.5}+\left[y^3\right]_{0}^{0.5}=0.25
+\int_{0}^{0.5}\int_{0}^{0.5}x\ dxdy + \int_{0}^{0.5}\int_{0}^{0.5}\frac{3y^2}{2}dxdy =
+\frac{1}{2} \left({ \int_{0}^{0.5}x\ dx + \int_{0}^{0.5}\frac{3y^2}{2}\ dy }\right)
 $$
+At this point, we can compute:
+$\int_{0}^{0.5}x\ dx = \frac{1}{8}$ and $\int_{0}^{0.5}\frac{3y^2}{2}\ dy = \frac{1}{16}$.
 
+It directly follows that $Pr(X < 0.5, Y < 0.5)= \frac{1+2}{32} = \frac{3}{32} \approx0.094$
 
 **Exercise 1.6**
 

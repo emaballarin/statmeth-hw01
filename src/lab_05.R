@@ -4,6 +4,7 @@ p <- 0.5
 
 nb_mixture <- function(my_n, my_r, my_p)
 {
+    # Note: here we use the shape/scale parametrization!
     Z = rgamma(my_n, shape = my_r, scale = my_p/(1-my_p))
     X = rpois(my_n, lambda = Z)
     return(X)
