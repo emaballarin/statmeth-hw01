@@ -221,6 +221,21 @@ Write a general `R` function for checking the validity of the central limit theo
 
 # ***DAAG*** EXERCISES
 
+**Exercise 4**
+
+***Solution***
+```{r daag_04, code = readLines("src/daag_04.R"), echo=TRUE}
+```
+
+
+
+**Exercise 6**
+
+***Solution***
+```{r daag_06, code = readLines("src/daag_06.R"), echo=TRUE}
+```
+
+
 **Exercise 11**
 
 ***Solution***
