@@ -23,6 +23,9 @@ for (cnt in 0:avg_factor)
 {
     mycounts = mycounts +
         hist(
+            # k*(upbound + 1) elements are generated directly via the vectorized `rgeom` function. Such elements are
+            # reshaped into a matrix of suitable dimensions via remainder-computation. Such matrix is transposed
+            # and then summed column-wise to produce the wanted results.
         colSums(t(matrix(rgeom(((0:(k*(upbound+1)-1))%%(upbound+1)), prob = p), nrow=(upbound+1), ncol=k))),
         breaks = seq_stencil,
         plot = FALSE)$density

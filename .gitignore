@@ -47,3 +47,6 @@ worklog.md
 # KnitR output
 figs/
 01_homework.html
+
+# Utilities
+publish.sh

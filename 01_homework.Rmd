@@ -21,6 +21,8 @@ output:
     highlight: tango
 header-includes:
 - \usepackage{color}
+- \usepackage{graphicx}
+- \usepackage{grffile}
 - \definecolor{Purple}{HTML}{911146}
 - \definecolor{Orange}{HTML}{CF4A30}
 - \setbeamercolor{alerted text}{fg=Orange}
@@ -65,7 +67,7 @@ Generate in `R` the same output shown in the Lab lecture for the Negative Binomi
 
 ***Solution***
 
-We can obtain the Binomial *pdf* $Binom(r, k, p)$ as the sum of $k$ iid Geometrical distributions $Geom(r, p)$ with same $p$ and $r$.
+We can obtain the Negative Binomial *pdf* $NegBinom(r, k, p)$ as the sum of $k$ iid Geometrical distributions $Geom(r, p)$ with same $p$ and $r$.
 
 ```{r lab_02, code = readLines("src/lab_02.R"), echo=TRUE}
 ```
@@ -224,14 +226,14 @@ Write a general `R` function for checking the validity of the central limit theo
 
 **Exercise 4**
 
-For the data frame ais (DAAG package).
+For the data frame `ais` (`DAAG` package).  
 
-(a)  Use the function str() to get information on each of the columns. 
-     Determine whether any of the columns hold missing values.
+(a)  Use the function `str()` to get information on each of the columns. 
+     Determine whether any of the columns hold missing values.  
      
 (b)  Make a table that shows the numbers of males and females for each different sport. 
      In which sports is there a large imbalance (e.g., by a factor of more than 2:1) in 
-     the numbersof the two sexes?
+     the numbersof the two sexes?  
 
 ***Solution***
 ```{r daag_04, code = readLines("src/daag_04.R"), echo=TRUE}
@@ -245,9 +247,9 @@ Create a data frame called `Manitoba.lakes` that contains the lake’s `elevatio
 a)  Use the following code to plotlog2(area) versus elevation, adding labeling infor-mation (there is an extreme value of area that makes a logarithmic scale pretty much essential):
 ```
 attach(Manitoba.lakes)
-plot(log2(area)  ̃ elevation, pch=16, xlim=c(170,280))# NB: Doubling the area increases log2(area) by 1.0
-text(log2(area)  ̃ elevation,labels=row.names(Manitoba.lakes), pos=4)text(log2(area)  ̃ elevation, labels=area, pos=2)
-title("Manitoba’s Largest Lakes")
+plot(log2(area) ~ elevation, pch=16, xlim=c(170,280)) # NB: Doubling the area increases log2(area) by 1.0
+text(log2(area) ~ elevation,labels=row.names (Manitoba.lakes), pos=4) text(log2(area) ~ elevation, labels=area, pos=2)
+title("Manitoba's Largest Lakes")
 detach(Manitoba.lakes)
 ```
 Devise captions that explain the labeling on the points and on they-axis. It will be necessary to explain how distances on the scale relate to changes in area.
@@ -321,6 +323,44 @@ b. Obtain the vector `ex01.36` from the `Devore6` (or `Devore7`) package. These 
 ***Solution***
 ```{r daag_12, code = readLines("src/daag_12.R"), echo=TRUE}
 ```
+
+
+**Exercise 13**
+
+The following contains plots of four different transformations of the `Animals` data from the `MASS` package.
+What different aspects of the data do these different graphs emphasize? Consider the effect on
+low values of the variables, as contrasted with the effect on high values.
+
+
+***Solution***
+
+```{r daag_13a,  echo=TRUE}
+require(MASS)
+data(Animals)
+
+plot(brain~body, data=Animals)  # Some linters may complain: that's fine.
+``` 
+In the previous scatterplot, both the `brain` and the `body` variables are represented in linear scale, inside the same plot area, using a *slight majoration* of min-max data range as the axis range.  
+So-obtained plot compresses the small-`brain`/small-`body` datapoints near $(0,0)$, being also present at least (might even be the same, though in the specific case they are not) one large-`brain` and one large-`body` datapoint. As a further consequence, the plot emphasizes extreme large values in at least one coordinate. Only 6 of such datapoints are easily distinguishable in their coordinates. Proportions are preserved.  
+
+
+```{r daag_13b,  echo=TRUE}
+plot(sqrt(brain)~ sqrt(body), data=Animals)  # Some linters may complain: that's fine.
+```
+In the same context as before, the data are now plotted through a square-root transform of the coordinates.  
+This shrinks axes ranges and alters proportions (according to the chosen transform). The presence of extreme large values in at least one coordinate is still visible. More small-`brain`/small-`body` datapoints are now distinguishable, but provided they are not too close to $(0,0)$. Some *datapoint-crowding* is still present for extreme small values.  
+
+
+```{r daag_13c,  echo=TRUE}
+plot(I(brain^0.1)~ I(body^0.1), data=Animals)  # Some linters may complain: that's fine.
+```
+By further decreasing the exponent of the power-law transform of the axes (now the $10^{th}$ root), the effect is further amplified. All datapoints are easily distinguishable, but proportionality is completely lost. There is not anymore a directly-acknowledgeable evidence of extreme values in either coordinate of any of the datapoints. Some intuitive evidence arises about a possible descriptive law in the *power* or *exponential* domain.  
+
+
+```{r daag_13d,  echo=TRUE}
+plot(log(brain)~ log(body), data=Animals)  # Some linters may complain: that's fine.
+```
+At the bi-logarithmic scale, all the observations given about the plot before still hold. Proportionality is still not easily visible, but the axes are now transformed in a (usually) more familiar manner. At this exploratory stage, qualitatively, an *exponential* relationship between the two data-coordinates can be assumed to be worth of further quantitative analysis. Agail, there is no easily noticeable evidence of extreme values.  
 
 
 **Exercise 15**
@@ -448,11 +488,12 @@ all.equal(ii, iris) # compare the created object and iris
 
 ```
 
+
 # ***CS*** EXERCISES
 
 **Exercise 1.1**
 
-Exponential random variable, $X \geq 0$, has *pdf* $f(x) = \lambda \cdot \ e^{−\lambda x}$.
+Exponential random variable, $X \geq 0$, has *pdf* $f(x) = \lambda \cdot \ e^{-\lambda x}$.
 
 1. Find the *cdf* and the quantile function for $X$.  
 2. Find $Pr(X < \lambda)$ and the median of $X$.  
@@ -561,7 +602,7 @@ It directly follows that $Pr(X < 0.5, Y < 0.5)= \frac{1+2}{32} = \frac{3}{32} \a
 **Exercise 1.6**
 
 Let $X$ and $Y$ be non-independent random variables, such that $var(X) =\sigma_{X}^{2}$, $var(Y)=\sigma_{Y}^{2}$ and $cov(X, Y) =\sigma_{X, Y}^{2}$. 
-Using the result from Section 1.6.2, find $var(X+Y)$ and $var(X−Y)$.
+Using the result from Section 1.6.2, find $var(X+Y)$ and $var(X-Y)$.
 
 ***Solution***
 
@@ -573,9 +614,20 @@ $E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] + 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] 
 
 If we define $Z = X - Y$, than we can compute $Var(z)$ as follow:
 
-$Var(Z) = E[(Z - E[Z])^{2}] = E[(X - Y - E[X - Y])^{2}] = E[((X - E[X]) - (Y - E[Y]))^{2}] =$ 
+$Var(Z') = E[(Z - E[Z])^{2}] = E[(X - Y - E[X - Y])^{2}] = E[((X - E[X]) - (Y - E[Y]))^{2}] =$ 
 
-$E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] - 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] = \sigma_{X}^{2} + \sigma_{Y}^{2} - 2 \cdot \sigma_{X, Y}^{2}$
+$E[(X - E[X])^{2}] + E[(Y - E[Y])^{2}] - 2 \cdot E[(X - E[X]) \cdot (Y - E[Y])] = \sigma_{X}^{2} + \sigma_{Y}^{2} - 2 \cdot \sigma_{X, Y}^{2}$.  
+
+
+However, if we want to follow the hinted-to paragraph, we may suppose that $X$ and $Y$ are the coordinates of a multi-variate random vector $W = V_{1} = \begin{bmatrix} X \\ Y \end{bmatrix}$ that has a generic distribution with covariance matrix $\Sigma$.
+
+So, let us define $V_{1} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}^{T}$ and $V_{2} = \begin{bmatrix} 1 \\ -1 \end{bmatrix}^{T}$ two bi-dimensional vectors used to obtain the random variates  $Z = X + Y$ and $Z' = X - Y$, respectively, via a linear transformation (matrix multiplication in this case). Thus, we can obtain the covariances of $Z$ and $Z'$ by applying the corresponding transformation rule for $\Sigma$:
+
+- Case $Z = X + Y$
+$Var(X + Y) = V \cdot \Sigma \cdot V^{T} = \begin{bmatrix} 1 & 1 \end{bmatrix} \cdot \begin{bmatrix} \sigma_{x}^{2} & \sigma_{x, y} \\ \sigma_{x, y}  & \sigma_{y}^{2} \end{bmatrix} \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} \sigma_{x}^{2} + \sigma_{x, y} && \sigma_{y}^{2} + \sigma_{x, y} \end{bmatrix} \cdot \begin{bmatrix} 1  \\ 1 \end{bmatrix} = \sigma_{X}^{2} + \sigma_{Y}^{2} + 2 \cdot \sigma_{X, Y}^{2}$
+
+- Case $Z = X - Y$
+$Var(X - Y) = V \cdot \Sigma \cdot V^{T} = \begin{bmatrix} 1 & -1 \end{bmatrix} \cdot \begin{bmatrix} \sigma_{x}^{2} & \sigma_{x, y} \\ \sigma_{x, y}  & \sigma_{y}^{2} \end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} \sigma_{x}^{2} - \sigma_{x, y} && -\sigma_{y}^{2} + \sigma_{x, y} \end{bmatrix} \cdot \begin{bmatrix} 1  \\ -1 \end{bmatrix} = \sigma_{X}^{2} + \sigma_{Y}^{2} - 2 \cdot \sigma_{X, Y}^{2}$
 
 
 **Exercise 1.7**
@@ -607,7 +659,7 @@ From the transitivity of pairwise-independence among sets of random variables th
 
 **Exercise 1.8**
 
-If $log(X)∼N(\mu, \sigma^{2})$, find the *pdf* of $X$.
+If $log(X)~N(\mu, \sigma^{2})$, find the *pdf* of $X$.
 
 ***Solution***
 
@@ -621,15 +673,15 @@ $f_{X}(x) = \frac{d F_{X}(e^{x})}{dx} = \frac{1}{\sqrt{2 \cdot \pi \cdot \sigma^
 
 **Exercise 1.9**
 
-Discrete random variable $Y$ has a Poisson distribution with parameter $λ$ if its *pdf* is $f(y) =λ \cdot y \cdot e^{- \frac{\lambda}{y!}}$, for $y= 0,1, \dots$
+Discrete random variable $Y$ has a Poisson distribution with parameter $\lambda$ if its *pdf* is $f(y) =\lambda \cdot y \cdot e^{- \frac{\lambda}{y!}}$, for $y= 0,1, \dots$
 
 a) Find the moment generating function for $Y$ (hint: the power series repre-sentation of the exponential function is useful).
 
-b) If $Y_{1}∼Poi(λ_{1})$ and independently $Y_{2}∼Poi(λ_{2})$ deduce the distribution of $Y_{1}+Y_{2}$, by employing a general property of m.g.f.s.
+b) If $Y_{1}~Poi(\lambda_{1})$ and independently $Y_{2}~Poi(\lambda_{2})$ deduce the distribution of $Y_{1}+Y_{2}$, by employing a general property of m.g.f.s.
 
 c) Making use of the previous result and the central limit theorem, deduce the normal approximation to the Poisson distribution.
 
-d) Confirm the previous result graphically, using `R` functions dpois, dnorm, plotorbarplotandlines. Confirm that the approximation improves with increasing $λ$.
+d) Confirm the previous result graphically, using `R` functions dpois, dnorm, plotorbarplotandlines. Confirm that the approximation improves with increasing $\lambda$.
 
 ***Solution***
 
