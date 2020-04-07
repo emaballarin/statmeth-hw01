@@ -211,6 +211,7 @@ qqline(
 )
 ```
 
+
 **Exercise 8**
 
 Write a general `R` function for checking the validity of the central limit theorem. *Hint* The function will consist of two parameters: `clt_function <- function(n, distr)`, where the first one is the sample size and the second one is the kind of distribution from which you generate. Use plots for visualizing the results.
@@ -307,6 +308,18 @@ table(gender, exclude=NULL)
 
 ```{r daag_11_e}
 rm(gender)
+```
+
+
+**Exercise 12**
+
+Write a function that calculates the proportion of values in a vector x that exceed some value `cutoff`.
+a. Use the sequence of numbers $1, 2, ..., 100$ to check that this function gives the result that is expected.
+b. Obtain the vector `ex01.36` from the `Devore6` (or `Devore7`) package. These data give the times required for individuals to escape from an oil platform during a drill. Use `dotplot()` to show the distribution of times. Calculate the proportion of escape times that exceed 7 minutes.
+
+
+***Solution***
+```{r daag_12, code = readLines("src/daag_12.R"), echo=TRUE}
 ```
 
 
