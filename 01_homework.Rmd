@@ -223,13 +223,35 @@ Write a general `R` function for checking the validity of the central limit theo
 
 **Exercise 4**
 
+For the data frame ais (DAAG package).
+
+(a)  Use the function str() to get information on each of the columns. 
+     Determine whether any of the columns hold missing values.
+     
+(b)  Make a table that shows the numbers of males and females for each different sport. 
+     In which sports is there a large imbalance (e.g., by a factor of more than 2:1) in 
+     the numbersof the two sexes?
+
 ***Solution***
 ```{r daag_04, code = readLines("src/daag_04.R"), echo=TRUE}
 ```
 
 
-
 **Exercise 6**
+
+Create a data frame called `Manitoba.lakes` that contains the lake’s `elevation` (in metersabove sea level) and `area` (in square kilometers) as listed below. Assign the names of the lakes using `therow.names()` function.
+
+a)  Use the following code to plotlog2(area) versus elevation, adding labeling infor-mation (there is an extreme value of area that makes a logarithmic scale pretty much essential):
+```
+attach(Manitoba.lakes)
+plot(log2(area)  ̃ elevation, pch=16, xlim=c(170,280))# NB: Doubling the area increases log2(area) by 1.0
+text(log2(area)  ̃ elevation,labels=row.names(Manitoba.lakes), pos=4)text(log2(area)  ̃ elevation, labels=area, pos=2)
+title("Manitoba’s Largest Lakes")
+detach(Manitoba.lakes)
+```
+Devise captions that explain the labeling on the points and on they-axis. It will be necessary to explain how distances on the scale relate to changes in area.
+
+(b)  Repeat the plot and associated labeling, now plotting `area` versus `elevation`,but specifying log="y" in order to obtain a logarithmicy-scale. Note: Thelog="y" setting carries across to the subsequent `text()` commands. See Subsection 2.1.5 for anexample.
 
 ***Solution***
 ```{r daag_06, code = readLines("src/daag_06.R"), echo=TRUE}
@@ -237,6 +259,19 @@ Write a general `R` function for checking the validity of the central limit theo
 
 
 **Exercise 11**
+
+Run the following code:
+```
+gender <- factor(c(rep("female", 91), rep("male", 92)))
+table(gender)
+gender <- factor(gender, levels=c("male", "female"))
+table(gender)
+gender <- factor(gender, levels=c("Male", "female"))# Note the mistake: "Male" should be "male"
+table(gender)
+table(gender, exclude=NULL)
+rm(gender)          # Remove gender
+```
+Explain the output from the successive uses of `table()`.
 
 ***Solution***
 
